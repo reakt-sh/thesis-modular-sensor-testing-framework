@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  datatrain_vnc:
+    build: .
+    container_name: datatrain_vnc
+    # NOTE: On macOS, "host" networking isn't supported; expose ports instead.
+    ports:
+      - "6080:6080"  # noVNC (browser)
+      - "5901:5901"  # VNC (client)
+    environment:
+      - DISPLAY=:1
+      - VNC_PASSWORD=datatrain
+      - VNC_RESOLUTION=1680x1050
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      # Optional: pin a ROS_DOMAIN_ID if you later run multiple containers
+      # - ROS_DOMAIN_ID=42
+    volumes:
+      - ./src:/home/dev/datatrain_ws/src
+      - ./bags:/home/dev/datatrain_ws/bags
+    tty: true
+    shm_size: "2gb"     # helps RViz2/Gazebo
