@@ -1,0 +1,21 @@
+services:
+  sim:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ros_jazzy:vnc
+    container_name: ros_gui
+    platform: linux/arm64
+    tty: true
+    stdin_open: true
+    environment:
+      - VNC_GEOMETRY=1600x900
+    ports:
+      - "127.0.0.1:5901:5901"
+      - "127.0.0.1:6080:6080"
+    volumes:
+      # my ROS workspace (edit locally, build inside)
+      - ../ros2_ws:/ws
+      # your local scripts into PATH inside container
+      - ./scripts/start-vnc.sh:/usr/local/bin/start-vnc.sh:ro
+      - ./scripts/stop-vnc.sh:/usr/local/bin/stop-vnc.sh:ro
