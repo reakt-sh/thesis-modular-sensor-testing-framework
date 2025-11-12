@@ -1,0 +1,5 @@
+# macOS
+.DS_Store
+
+# ignore the 'writing' folder at the repo root
+/writing/
