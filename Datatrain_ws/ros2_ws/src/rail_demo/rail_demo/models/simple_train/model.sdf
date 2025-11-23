@@ -1,0 +1,73 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <model name="simple_train">
+    <pose>0 0 0.05 0 0 0</pose>
+
+    <link name="base">
+      <inertial><mass>10</mass></inertial>
+      <collision name="base_col">
+        <geometry><box><size>0.8 0.4 0.2</size></box></geometry>
+      </collision>
+      <visual name="base_vis">
+        <geometry>
+         <box>
+            <size>0.8 0.4 0.2</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>0.2 0.3 0.8 1</diffuse>
+        </material>
+      </visual>
+
+      <!-- Optional 2D LiDAR -->
+      <sensor name="lidar" type="gpu_lidar">
+        <pose>0.3 0 0.15 0 0 0</pose>
+        <update_rate>15</update_rate>
+        <lidar>
+          <scan><horizontal><samples>720</samples><min_angle>-1.57</min_angle><max_angle>1.57</max_angle></horizontal></scan>
+          <range><min>0.05</min><max>20.0</max><resolution>0.01</resolution></range>
+        </lidar>
+        <always_on>1</always_on>
+      </sensor>
+    </link>
+
+    <!-- Wheels (cosmetic) -->
+    <link name="wheel_left">
+      <pose>0 0.2 0.05 0 1.5708 0</pose>
+      <collision name="col"><geometry><cylinder><radius>0.08</radius><length>0.05</length></cylinder></geometry></collision>
+      <visual name="vis"><geometry><cylinder><radius>0.08</radius><length>0.05</length></cylinder></geometry></visual>
+    </link>
+    <link name="wheel_right">
+      <pose>0 -0.2 0.05 0 1.5708 0</pose>
+      <collision name="col"><geometry><cylinder><radius>0.08</radius><length>0.05</length></cylinder></geometry></collision>
+      <visual name="vis"><geometry><cylinder><radius>0.08</radius><length>0.05</length></cylinder></geometry></visual>
+    </link>
+
+    <joint name="left_wheel_hinge" type="revolute">
+      <parent>base</parent><child>wheel_left</child>
+      <axis><xyz>0 1 0</xyz></axis>
+    </joint>
+    <joint name="right_wheel_hinge" type="revolute">
+      <parent>base</parent><child>wheel_right</child>
+      <axis><xyz>0 1 0</xyz></axis>
+    </joint>
+
+    <!-- Diff-drive plugin (Gazebo Sim system) -->
+    <plugin name="gz::sim::systems::DiffDrive" filename="gz-sim-diff-drive-system">
+      <left_joint>left_wheel_hinge</left_joint>
+      <right_joint>right_wheel_hinge</right_joint>
+      <wheel_separation>0.4</wheel_separation>
+      <wheel_radius>0.08</wheel_radius>
+      <odom_publish_frequency>30</odom_publish_frequency>
+      <topic>cmd_vel</topic>
+      <odom_frame>odom</odom_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+    </plugin>
+
+    <plugin name="gz::sim::systems::PosePublisher" filename="gz-sim-pose-publisher-system">
+      <publish_link_pose>true</publish_link_pose>
+      <publish_nested_model_pose>true</publish_nested_model_pose>
+      <static_publisher>true</static_publisher>
+    </plugin>
+  </model>
+</sdf>

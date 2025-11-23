@@ -18,4 +18,3 @@ services:
       - ../ros2_ws:/ws
       # your local scripts into PATH inside container
       - ./scripts/start-vnc.sh:/usr/local/bin/start-vnc.sh:ro
-      - ./scripts/stop-vnc.sh:/usr/local/bin/stop-vnc.sh:ro

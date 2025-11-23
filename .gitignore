@@ -1,5 +1,22 @@
 # macOS
 .DS_Store
+# Python
+**/__pycache__/
+**/*.py[cod]
+
+# Editors
+.vscode/
+.idea/
 
 # ignore the 'writing' folder at the repo root
 /writing/
+
+# colcon artifacts
+/Datatrain_ws/ros2_ws/build
+/Datatrain_ws/ros2_ws/install
+/Datatrain_ws/ros2_ws/log
+
+# Misc
+*.swp
+*.swo
+*~

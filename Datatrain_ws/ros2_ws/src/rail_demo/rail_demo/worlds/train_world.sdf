@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <world name="train_world">
+    <plugin name="gz::sim::systems::SceneBroadcaster" filename="gz-sim-scene-broadcaster-system"/>
+    <plugin name="gz::sim::systems::UserCommands" filename="gz-sim-user-commands-system"/>
+    <gravity>0 0 -9.81</gravity>
+
+    <!-- Ground -->
+   <!-- Local ground plane as a big thin box -->
+  <model name="ground" static="true">
+    <pose>0 0 0 0 0 0</pose>
+    <link name="ground_link">
+      <collision name="col">
+        <geometry><box><size>200 200 0.05</size></box></geometry>
+      </collision>
+      <visual name="vis">
+        <geometry><box><size>200 200 0.05</size></box></geometry>
+        <material><diffuse>0.7 0.7 0.7 1</diffuse></material>
+      </visual>
+    </link>
+  </model>
+
+    <!-- Simple straight "track": a long, thin box (visual + collision) -->
+    <model name="straight_track" static="true">
+      <pose>0 0 0 0 0 0</pose>
+      <link name="track">
+        <visual name="vis">
+          <geometry><box><size>20 0.3 0.05</size></box></geometry>
+          <material><diffuse>0.15 0.15 0.15 1</diffuse></material>
+        </visual>
+        <collision name="col">
+          <geometry><box><size>20 0.3 0.05</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+  </world>
+</sdf>
