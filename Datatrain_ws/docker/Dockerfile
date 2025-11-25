@@ -4,7 +4,10 @@ FROM ros:jazzy-ros-base
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Base tools, ROS dev tools, lightweight desktop + VNC + noVNC
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get update --fix-missing && \
+    apt-get install -y --no-install-recommends \
     bash-completion locales apt-transport-https ca-certificates curl gnupg lsb-release \
     python3-pip python3-venv git build-essential cmake \
     python3-colcon-common-extensions python3-rosdep python3-vcstool \
@@ -14,23 +17,29 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/*
 
 # Full ROS desktop (RViz, demos, etc.) while staying on the official multi-arch base
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    apt-get update --fix-missing && \
+    apt-get install -y --no-install-recommends \
     ros-jazzy-desktop-full \
  && rm -rf /var/lib/apt/lists/*
 
 # Gazebo Harmonic (gz CLI) from OSRF repo
 RUN set -eux; \
+    apt-get clean && rm -rf /var/lib/apt/lists/*; \
     apt-get update && apt-get install -y --no-install-recommends curl gnupg lsb-release; \
     curl -fsSL https://packages.osrfoundation.org/gazebo.gpg \
       -o /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg; \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] https://packages.osrfoundation.org/gazebo/ubuntu-stable $(. /etc/os-release && echo $VERSION_CODENAME) main" \
       > /etc/apt/sources.list.d/gazebo-stable.list; \
+    apt-get clean && rm -rf /var/lib/apt/lists/*; \
     apt-get update; \
     apt-get install -y --no-install-recommends gz-harmonic; \
     rm -rf /var/lib/apt/lists/*
 
 # ROS ↔ Gazebo bridge
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    apt-get update --fix-missing && \
+    apt-get install -y --no-install-recommends \
     ros-jazzy-ros-gz \
  && rm -rf /var/lib/apt/lists/*
 
@@ -44,9 +53,6 @@ RUN python3 -m venv --system-site-packages /root/venvs/ros \
     'source /root/venvs/ros/bin/activate' \
     'test -f /ws/install/setup.bash && source /ws/install/setup.bash' \
     >> /root/.bashrc
-
-#Just for god measure
-RUN apt update 
 
 WORKDIR /ws
 # (Keep upstream ENTRYPOINT ["/ros_entrypoint.sh"] and CMD ["bash"])

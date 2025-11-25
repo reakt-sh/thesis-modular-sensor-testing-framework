@@ -5,7 +5,6 @@ services:
       dockerfile: Dockerfile
     image: ros_jazzy:vnc
     container_name: ros_gui
-    platform: linux/arm64
     tty: true
     stdin_open: true
     environment:
