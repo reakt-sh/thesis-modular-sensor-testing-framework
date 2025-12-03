@@ -9,6 +9,7 @@ services:
     stdin_open: true
     environment:
       - VNC_GEOMETRY=1600x900
+      - PATH=/dev-scripts:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     ports:
       - "127.0.0.1:5901:5901"
       - "127.0.0.1:6080:6080"
@@ -16,4 +17,4 @@ services:
       # my ROS workspace (edit locally, build inside)
       - ../ros2_ws:/ws
       # your local scripts into PATH inside container
-      - ./scripts/start-vnc.sh:/usr/local/bin/start-vnc.sh:ro
+      - ./dev-scripts:/dev-scripts:ro
