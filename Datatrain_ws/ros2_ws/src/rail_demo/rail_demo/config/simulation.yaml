@@ -1,0 +1,2 @@
+model: gazebo_train
+world: train_world.sdf
