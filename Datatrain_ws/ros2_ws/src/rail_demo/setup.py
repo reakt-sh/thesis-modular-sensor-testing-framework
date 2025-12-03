@@ -4,12 +4,27 @@ import os
 package_name = 'rail_demo'
 
 def collect(subdir: str):
-    files = []
+    """
+    Collect all files under rail_demo/<subdir> and create data_files entries
+    that preserve the relative directory structure.
+
+    Example:
+      rail_demo/models/gazebo_train/model.sdf
+    will be installed to:
+      share/rail_demo/models/gazebo_train/model.sdf
+    """
+    data = []
     base = os.path.join(package_name, subdir)
     for root, _, names in os.walk(base):
-        for n in names:
-            files.append(os.path.join(root, n))
-    return [('share/{}/{}'.format(package_name, subdir), files)]
+        if not names:
+            continue
+        # relative directory inside the package, e.g. "models/gazebo_train"
+        rel_dir = os.path.relpath(root, package_name)
+        # install directory under share/, e.g. "share/rail_demo/models/gazebo_train"
+        install_dir = os.path.join('share', package_name, rel_dir)
+        src_files = [os.path.join(root, n) for n in names]
+        data.append((install_dir, src_files))
+    return data
 
 setup(
     name=package_name,
