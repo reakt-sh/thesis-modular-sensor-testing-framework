@@ -43,6 +43,9 @@ setup(
     extras_require={'test': ['pytest']},
     entry_points={
         'console_scripts': [
+            'aoi_visualizer = rail_demo.scripts.aoi_visualizer:main',
+            'generate_aoi_models = rail_demo.scripts.generate_aoi_models:main',
+            'debug_spawn_front = rail_demo.scripts.debug_spawn_front:main',
             # 'controller = rail_demo.controller:main',
         ],
     },

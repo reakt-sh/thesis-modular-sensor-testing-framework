@@ -17,4 +17,9 @@ colcon build --symlink-install
 echo "[run_demo] Sourcing workspace overlay: $INSTALL_SETUP"
 source "$INSTALL_SETUP"
 
-echo "ros2 launch rail_demo yourfavorite.launch.py here"
+echo "[run_demo] Launching Gazebo world..."
+ros2 launch rail_demo world_spawn.launch.py
+
+
+echo "[run_demo] spawning gazebo train..."
+ros2 launch rail_demo train_spawn.launch.py
