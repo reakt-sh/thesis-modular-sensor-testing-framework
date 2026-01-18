@@ -1,0 +1,35 @@
+<sdf version="1.7">
+  <model name="top_aoi_plane_r1_c1_lidar_simple">
+    <static>false</static>
+    <link name="sensor_link">
+    <visual name="lidar_body">
+      <geometry>
+        <cylinder>
+          <radius>0.05</radius>
+          <length>0.08</length>
+        </cylinder>
+      </geometry>
+      <material>
+        <ambient>0.1 0.1 0.1 1</ambient>
+        <diffuse>0.1 0.1 0.1 1</diffuse>
+      </material>
+    </visual>
+      <sensor name='gpu_lidar' type='gpu_lidar'>"
+        <update_rate>10.0</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>1024</samples>
+              <min_angle>-3.14159</min_angle>
+              <max_angle>3.14159</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.5</min>
+            <max>120.0</max>
+          </range>
+        </ray>
+      </sensor>
+    </link>
+  </model>
+</sdf>

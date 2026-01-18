@@ -262,21 +262,21 @@ def transform_grid_points_to_world(
 
 #Yaml logic 
 def write_sensor_positions_yaml(slots):
-    """
-    Write generated sensor position slots to YAML.
-    """
+    data = {
+        "slots": slots
+    }
+
+    # --- 1) Write to install space (ROS runtime) ---
     pkg_share = get_package_share_directory("rail_demo")
-    out_path = os.path.join(
+    install_path = os.path.join(
         pkg_share,
         "config",
         "generated_sensor_positions.yaml"
     )
 
-    data = {
-        "slots": slots
-    }
+    os.makedirs(os.path.dirname(install_path), exist_ok=True)
 
-    with open(out_path, "w", encoding="utf-8") as f:
+    with open(install_path, "w", encoding="utf-8") as f:
         yaml.safe_dump(
             data,
             f,
@@ -284,7 +284,30 @@ def write_sensor_positions_yaml(slots):
             default_flow_style=False
         )
 
-    print(f"[AOI] Wrote sensor position YAML to: {out_path}")
+    print(f"[AOI] Wrote sensor positions to install: {install_path}")
+    print("[AOI] NOTE: Copy generated_sensor_positions.yaml from install/ to src/ if you want to version it")   
+
+    # --- 2) Write to src space (developer / version control) ---
+    # src_path = os.path.join(
+    #     os.getcwd(),                  # /ws
+    #     "src",
+    #     "rail_demo",
+    #     "rail_demo",
+    #     "config",
+    #     "generated_sensor_positions.yaml"
+    # )
+
+    # if os.path.isdir(os.path.dirname(src_path)):
+    #     with open(src_path, "w", encoding="utf-8") as f:
+    #         yaml.safe_dump(
+    #             data,
+    #             f,
+    #             sort_keys=False,
+    #             default_flow_style=False
+    #         )
+    #     print(f"[AOI] Wrote sensor positions to src: {src_path}")
+    # else:
+    #     print("[AOI] Src config directory not found, skipping src write")
 
 # Main launch logic
 

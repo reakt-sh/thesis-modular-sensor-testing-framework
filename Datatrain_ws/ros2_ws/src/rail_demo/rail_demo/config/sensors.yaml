@@ -1,1 +1,14 @@
-#here we define sensor setup
+sensors:
+  lidar_simple:
+    type: lidar
+    gazebo_plugin: gpu_lidar
+    frame: sensor_link
+    topic: /lidar/points
+    update_rate: 10.0
+
+    params:
+      horizontal_fov: 6.283185  # 360 deg
+      vertical_fov: 0.0
+      range_min: 0.5
+      range_max: 120.0
+      samples: 1024

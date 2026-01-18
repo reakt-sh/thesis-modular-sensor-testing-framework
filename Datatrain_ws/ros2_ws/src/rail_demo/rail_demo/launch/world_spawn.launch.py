@@ -105,6 +105,7 @@ def generate_launch_description():
     output="screen"
 )
 
+
     return LaunchDescription([
         SetEnvironmentVariable("DISPLAY", ":1"),
         SetEnvironmentVariable("GZ_SIM_RESOURCE_PATH", merged),
