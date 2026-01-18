@@ -260,6 +260,32 @@ def transform_grid_points_to_world(
 
     return transformed
 
+#Yaml logic 
+def write_sensor_positions_yaml(slots):
+    """
+    Write generated sensor position slots to YAML.
+    """
+    pkg_share = get_package_share_directory("rail_demo")
+    out_path = os.path.join(
+        pkg_share,
+        "config",
+        "generated_sensor_positions.yaml"
+    )
+
+    data = {
+        "slots": slots
+    }
+
+    with open(out_path, "w", encoding="utf-8") as f:
+        yaml.safe_dump(
+            data,
+            f,
+            sort_keys=False,
+            default_flow_style=False
+        )
+
+    print(f"[AOI] Wrote sensor position YAML to: {out_path}")
+
 # Main launch logic
 
 def spawn_aois(context):
@@ -268,6 +294,8 @@ def spawn_aois(context):
 
     with open(yaml_path, "r") as f:
         cfg = yaml.safe_load(f)
+
+    sensor_slots = [] #collect for sensor yaml export
 
     # ---- Train pose (trusted from YAML) ----
     train = cfg["train_spawn"]
@@ -332,14 +360,33 @@ def spawn_aois(context):
                 train_pos=train_pos,
             )
 
-
+            delete_all_aoi_entities()
             # Spawn grid point visualization markers
             for gp in grid_points_world:
                 r = gp["row"]
                 c = gp["col"]
                 pos = gp["position_world"]
+                pos_train = gp["position_train"]
 
                 grid_name = f"{entity_name}_grid_r{r}_c{c}"
+
+                sensor_slots.append({
+                    "name": f"{entity_name}_r{r}_c{c}",
+                    "aoi": entity_name,
+                    "grid": {
+                        "row": r,
+                        "col": c,
+                    },
+                    "pose": {
+                        "x": round(pos_train[0], 6),
+                        "y": round(pos_train[1], 6),
+                        "z": round(pos_train[2], 6),
+                        "roll": 0.0,
+                        "pitch": 0.0,
+                        "yaw": 0.0,
+                    },
+                    "sensor": None
+                })
 
                 # Spawn static grid marker
                 spawn_plane_entity(
@@ -361,14 +408,15 @@ def spawn_aois(context):
 
         sdf_path = write_sdf_to_model_folder(sdf_xml)
 
-        delete_all_aoi_entities()
         
+
         spawn_plane_entity(
             entity_name,
             sdf_path,
             aoi_pos_world,
             aoi_q_world
         )
+        write_sensor_positions_yaml(sensor_slots)
 
     return []
 
