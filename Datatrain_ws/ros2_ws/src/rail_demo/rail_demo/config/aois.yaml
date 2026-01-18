@@ -34,3 +34,7 @@ aoi:
 
     visual:
       color: [0.2, 0.8, 0.2, 0.4]  # semi-transparent green
+
+    grid: # grid size  
+      rows: 2
+      cols: 2
