@@ -12,24 +12,25 @@ train_spawn:
 aoi:
   top:
     entity_name: top_aoi_plane
-    parent_link: base_link   # semantic only (for later)
+    parent_link: base_link 
     description: "Top AOI plane for roof-mounted sensors"
 
     # Plane geometry (local to plane)
     size:
-      width: 2.0    # x direction
-      depth: 1.2    # y direction
+      width: 0.4    # x direction
+      depth: 0.4
+          # y direction
 
     # Placement relative to train (conceptually)
     offset:
       x: 0.0
-      y: 0.0
-      z: 1.85       # tweak this to move plane closer/further
+      y: -0.1
+      z: 0.8       # tweak this to move plane closer/further
 
     orientation_rpy:
       roll: 0.0
       pitch: 0.0
-      yaw: 0.0
+      yaw: -1.1571
 
     visual:
       color: [0.2, 0.8, 0.2, 0.4]  # semi-transparent green

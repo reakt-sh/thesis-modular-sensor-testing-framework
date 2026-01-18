@@ -30,11 +30,9 @@ def quaternion_from_rpy(roll, pitch, yaw):
 
 
 def rotate_vector_by_quaternion(v, q):
-    # v' = q * (v,0) * q^-1
     x, y, z = v
     qx, qy, qz, qw = q
 
-    # Quaternion-vector multiplication
     ix =  qw * x + qy * z - qz * y
     iy =  qw * y + qz * x - qx * z
     iz =  qw * z + qx * y - qy * x
@@ -73,19 +71,16 @@ def delete_entity(entity_name):
     time.sleep(0.1)
 
 
-def spawn_plane_entity(entity_name, sdf, position, orientation):
+def spawn_plane_entity(entity_name, sdf_filename, position, orientation):
     x, y, z = position
     qx, qy, qz, qw = orientation
-
-    # Escape quotes for shell
-    sdf_escaped = sdf.replace('"', "'")
 
     cmd = (
         f"ros2 service call /world/train_world/create "
         f"ros_gz_interfaces/srv/SpawnEntity "
         f"\"{{entity_factory: {{"
         f"name: '{entity_name}', "
-        f"sdf: \"{sdf_escaped}\", "
+        f"sdf_filename: '{sdf_filename}', "
         f"pose: {{"
         f"position: {{x: {x}, y: {y}, z: {z}}}, "
         f"orientation: {{x: {qx}, y: {qy}, z: {qz}, w: {qw}}}"
@@ -105,8 +100,7 @@ def generate_plane_sdf(entity_name, width, depth, color):
     thickness = 0.01
     r, g, b, a = color
 
-    return f"""
-<sdf version="1.7">
+    return f"""<sdf version="1.7">
   <model name="{entity_name}">
     <static>true</static>
     <link name="plane_link">
@@ -123,8 +117,28 @@ def generate_plane_sdf(entity_name, width, depth, color):
       </visual>
     </link>
   </model>
-</sdf>
-"""
+</sdf>"""
+
+
+def write_sdf_to_model_folder(sdf_xml):
+    pkg_share = get_package_share_directory("rail_demo")
+
+    model_dir = os.path.join(
+        pkg_share,
+        "rail_demo",
+        "models",
+        "generated_aois",
+        "top"
+    )
+
+    os.makedirs(model_dir, exist_ok=True)
+
+    sdf_path = os.path.join(model_dir, "model.sdf")
+
+    with open(sdf_path, "w", encoding="utf-8") as f:
+        f.write(sdf_xml)
+
+    return sdf_path
 
 
 # ----------------------------
@@ -138,22 +152,16 @@ def spawn_aois(context):
     with open(yaml_path, "r") as f:
         cfg = yaml.safe_load(f)
 
-    # ---- Train pose (trusted from YAML) ----
     train = cfg["train_spawn"]
 
     train_pos = (train["x"], train["y"], train["z"])
-    train_q = quaternion_from_rpy(
-        train["R"], train["P"], train["Y"]
-    )
+    train_q = quaternion_from_rpy(train["R"], train["P"], train["Y"])
 
-    # ---- Iterate AOIs ----
-    for aoi_name, aoi in cfg.get("aoi", {}).items():
+    for _, aoi in cfg.get("aoi", {}).items():
         entity_name = aoi["entity_name"]
 
-        # Delete existing entity
         delete_entity(entity_name)
 
-        # AOI local offset and orientation
         offset = aoi["offset"]
         offset_local = (offset["x"], offset["y"], offset["z"])
 
@@ -162,7 +170,6 @@ def spawn_aois(context):
             rpy["roll"], rpy["pitch"], rpy["yaw"]
         )
 
-        # Transform offset into world frame
         offset_world = rotate_vector_by_quaternion(offset_local, train_q)
         aoi_pos_world = (
             train_pos[0] + offset_world[0],
@@ -170,34 +177,29 @@ def spawn_aois(context):
             train_pos[2] + offset_world[2],
         )
 
-        # Combine orientations
         aoi_q_world = multiply_quaternions(train_q, aoi_q_local)
 
-        # Generate SDF
         size = aoi["size"]
         color = aoi.get("visual", {}).get("color", [0.2, 0.8, 0.2, 0.4])
 
-        sdf = generate_plane_sdf(
+        sdf_xml = generate_plane_sdf(
             entity_name,
             size["width"],
             size["depth"],
             color
         )
 
-        # Spawn entity
+        sdf_path = write_sdf_to_model_folder(sdf_xml)
+
         spawn_plane_entity(
             entity_name,
-            sdf,
+            sdf_path,
             aoi_pos_world,
             aoi_q_world
         )
 
     return []
 
-
-# ----------------------------
-# Launch description
-# ----------------------------
 
 def generate_launch_description():
     return LaunchDescription([
