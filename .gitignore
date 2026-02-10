@@ -15,8 +15,8 @@
 /Datatrain_ws/ros2_ws/build
 /Datatrain_ws/ros2_ws/install
 /Datatrain_ws/ros2_ws/log
-/Datatrain_ws/ros2_ws/log
 /Datatrain_ws/ros2_ws/src/rail_demo/rail_demo/models/base_models/reakt_train
+/Datatrain_ws/ros2_ws/src/rail_demo/rail_demo/models/base_models/Reakt_Pilot
 # Misc
 *.swp
 *.swo
