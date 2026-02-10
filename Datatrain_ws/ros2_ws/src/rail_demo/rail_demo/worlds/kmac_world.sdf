@@ -3712,9 +3712,9 @@
       </camera>
     </gui>
 
-    <include>
+    <!-- <include>
       <pose>10.0 -0.019 0.13 0.0 0.0 1.5708</pose>
       <uri>model://gazebo_train</uri>
-    </include>    
+    </include>     -->
   </world>
 </sdf>

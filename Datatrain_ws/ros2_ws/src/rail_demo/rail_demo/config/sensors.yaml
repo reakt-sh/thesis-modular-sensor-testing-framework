@@ -1,14 +1,232 @@
 sensors:
-  lidar_simple:
-    type: lidar
+  lidar_1:
+    type: gpu_lidar
     gazebo_plugin: gpu_lidar
     frame: sensor_link
-    topic: /lidar/points
+    topic: lidar_1
+    update_rate: 5
+
+    params:
+      # --- Field of View ---
+      horizontal_fov: 6.283185        # 360 deg
+      vertical_fov: 0.35               # flat scan
+
+      # --- Sampling ---
+      horizontal_samples: 720
+      horizontal_resolution: 1.0
+
+      vertical_samples: 16
+      vertical_resolution: 1.0
+
+      # --- Range ---
+      range_min: 0.8
+      range_max: 120.0
+      range_resolution: 0.01
+
+      # --- Sensor behavior ---
+      always_on: true
+      visualize: true
+  lidar_3:
+    type: gpu_lidar
+    gazebo_plugin: gpu_lidar
+    frame: sensor_link
+    topic: lidar_3
     update_rate: 10.0
 
     params:
-      horizontal_fov: 6.283185  # 360 deg
-      vertical_fov: 0.0
-      range_min: 0.5
+      # --- Field of View ---
+      horizontal_fov: 6.283185        # 360 deg
+      vertical_fov: 0.35               # flat scan
+
+      # --- Sampling ---
+      horizontal_samples: 4096
+      horizontal_resolution: 1.0
+
+      vertical_samples: 16
+      vertical_resolution: 1.0
+
+      # --- Range ---
+      range_min: 0.8
       range_max: 120.0
-      samples: 1024
+      range_resolution: 0.01
+
+      # --- Sensor behavior ---
+      always_on: true
+      visualize: true
+  lidar_2:
+    type: gpu_lidar
+    gazebo_plugin: gpu_lidar
+    frame: sensor_link
+    topic: lidar_2
+    update_rate: 5.0
+
+    params:
+      # --- Field of View ---
+      horizontal_fov: 6.283185        # 360 deg
+      vertical_fov: 0.35               # flat scan
+
+      # --- Sampling ---
+      horizontal_samples: 720
+      horizontal_resolution: 1.0
+
+      vertical_samples: 16
+      vertical_resolution: 1.0
+
+      # --- Range ---
+      range_min: 0.8
+      range_max: 120.0
+      range_resolution: 0.01
+
+      # --- Sensor behavior ---
+      always_on: true
+      visualize: true
+
+  
+  camera_1:
+    type: camera
+    frame: camera_link
+    topic: camera_1
+    update_rate: 5
+
+    params:
+      width: 640
+      height: 480
+      horizontal_fov: 2.094395  # ~120°
+      near_clip: 0.1
+      far_clip: 100.0
+      always_on: true
+      visualize: true
+  camera_2:
+    type: camera
+    frame: camera_link
+    topic: camera_2
+    update_rate: 30.0
+
+    params:
+      width: 640
+      height: 480
+      horizontal_fov: 2.094395  # ~120°
+      near_clip: 0.1
+      far_clip: 100.0
+      always_on: true
+      visualize: true
+
+
+  lidar_roof_3d:
+    type: gpu_lidar
+    gazebo_plugin: gpu_lidar
+    frame: lidar_link
+    topic: lidar/roof
+    update_rate: 5.0
+
+    params:
+      # --- Field of View ---
+      horizontal_fov: 6.283185      # 360°
+      vertical_fov: 0.35            # ~20° vertical (3D scan)
+
+      # --- Sampling ---
+      horizontal_samples:  720
+      horizontal_resolution: 1
+
+      vertical_samples: 16
+      vertical_resolution: 1.0
+
+      # --- Range ---
+      range_min: 0.8
+      range_max: 120.0
+      range_resolution: 0.01
+
+      # --- Behavior ---
+      always_on: true
+      visualize: true
+  
+  camera_front_wide:
+    type: camera
+    frame: camera_link
+    topic: camera/front/image
+    update_rate: 10
+
+    params:
+      width: 640
+      height: 480
+      horizontal_fov: 2.094395      # ~120°
+      near_clip: 0.1
+      far_clip: 100.0
+
+      always_on: true
+      visualize: true
+    
+  imu_base:
+    type: imu
+    frame: imu_link
+    topic: imu/data
+    update_rate: 100.0
+
+    params:
+      always_on: true
+      visualize: false
+
+  lidar_front_long:
+    type: gpu_lidar
+    gazebo_plugin: gpu_lidar
+    frame: lidar_link
+    topic: lidar/front
+    update_rate: 5.0
+
+    params:
+      horizontal_fov: 1.57          # ~90° forward
+      vertical_fov: 0.2
+
+      horizontal_samples: 1024
+      vertical_samples: 8
+
+      range_min: 0.8
+      range_max: 180.0
+      range_resolution: 0.01
+
+      always_on: true
+      visualize: true
+
+  camera_side_left:
+    type: camera
+    frame: camera_link
+    topic: camera/side_left/image
+    update_rate: 20.0
+
+    params:
+      width: 640
+      height: 480
+      horizontal_fov: 1.8
+
+      near_clip: 0.1
+      far_clip: 50.0
+
+      always_on: true
+      visualize: true
+
+  navsat_base:
+    type: navsat
+    frame: navsat_link
+    topic: navsat/fix
+    update_rate: 5.0
+
+    params:
+      always_on: true
+      visualize: false
+
+  camera_depth_1:
+    type: depth_camera
+    frame: camera_link
+    topic: camera_depth_1
+    update_rate: 5
+
+    params:
+      width: 640
+      height: 480
+      horizontal_fov: 1.4
+
+      near_clip: 0.2
+      far_clip: 30.0
+
+      always_on: true
+      visualize: true

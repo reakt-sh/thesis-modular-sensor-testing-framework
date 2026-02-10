@@ -1,6 +1,23 @@
 <?xml version="1.0"?>
 <sdf version='1.7'>
-  <world name='default'>
+  <world name='train_world'>
+   <plugin
+          filename="gz-sim-physics-system"
+          name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin
+            filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin
+          filename="gz-sim-scene-broadcaster-system"
+          name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
     <model name='ground_plane'>
       <static>1</static>
       <link name='link'>
@@ -1908,7 +1925,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -1928,7 +1945,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -1945,7 +1962,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_treemeshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -1971,7 +1988,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -1991,7 +2008,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2008,7 +2025,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2034,7 +2051,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2054,7 +2071,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2071,7 +2088,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2097,7 +2114,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2117,7 +2134,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2134,7 +2151,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2160,7 +2177,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2180,7 +2197,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2197,7 +2214,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2223,7 +2240,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2243,7 +2260,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2260,7 +2277,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2286,7 +2303,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2306,7 +2323,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2323,7 +2340,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2349,7 +2366,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2369,7 +2386,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2386,7 +2403,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2412,7 +2429,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2432,7 +2449,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2449,7 +2466,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2475,7 +2492,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2495,7 +2512,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2512,7 +2529,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2538,7 +2555,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2558,7 +2575,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2575,7 +2592,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2601,7 +2618,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2621,7 +2638,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2638,7 +2655,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2664,7 +2681,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2684,7 +2701,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2701,7 +2718,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2727,7 +2744,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2747,7 +2764,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2764,7 +2781,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2790,7 +2807,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2810,7 +2827,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2827,7 +2844,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2853,7 +2870,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2873,7 +2890,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2890,7 +2907,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2916,7 +2933,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2936,7 +2953,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -2953,7 +2970,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -2979,7 +2996,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2999,7 +3016,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -3016,7 +3033,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -3042,7 +3059,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -3062,7 +3079,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -3079,7 +3096,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -3105,7 +3122,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -3125,7 +3142,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -3142,7 +3159,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -3168,7 +3185,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -3188,7 +3205,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -3205,7 +3222,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -4949,7 +4966,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -4969,7 +4986,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -4986,7 +5003,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5012,7 +5029,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5032,7 +5049,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5049,7 +5066,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5075,7 +5092,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5095,7 +5112,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5112,7 +5129,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5138,7 +5155,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5158,7 +5175,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5175,7 +5192,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5201,7 +5218,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5221,7 +5238,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5238,7 +5255,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5264,7 +5281,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5284,7 +5301,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5301,7 +5318,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5327,7 +5344,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5347,7 +5364,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5364,7 +5381,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5390,7 +5407,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5410,7 +5427,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5427,7 +5444,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5453,7 +5470,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5473,7 +5490,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5490,7 +5507,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5516,7 +5533,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5536,7 +5553,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5553,7 +5570,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5579,7 +5596,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5599,7 +5616,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5616,7 +5633,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5642,7 +5659,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5662,7 +5679,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5679,7 +5696,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5705,7 +5722,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5725,7 +5742,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5742,7 +5759,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5768,7 +5785,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5788,7 +5805,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5805,7 +5822,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5831,7 +5848,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5851,7 +5868,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5868,7 +5885,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5894,7 +5911,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5914,7 +5931,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5931,7 +5948,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -5957,7 +5974,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -5977,7 +5994,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -5994,7 +6011,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>
@@ -6020,7 +6037,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -6040,7 +6057,7 @@
         <visual name='branch'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Branch</name>
               </submesh>
@@ -6057,7 +6074,7 @@
         <visual name='bark'>
           <geometry>
             <mesh>
-              <uri>model://pine_tree/meshes/pine_tree.dae</uri>
+              <uri>model://base_models/pine_tree/meshes/pine_tree.dae</uri>
               <submesh>
                 <name>Bark</name>
               </submesh>

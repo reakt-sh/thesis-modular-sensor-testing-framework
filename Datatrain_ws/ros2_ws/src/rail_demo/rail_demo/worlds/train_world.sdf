@@ -1,6 +1,23 @@
 <?xml version="1.0"?>
-<sdf version='1.9'>
+<sdf version='1.7'>
   <world name='train_world'>
+    <plugin
+          filename="gz-sim-physics-system"
+          name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin
+            filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin
+          filename="gz-sim-scene-broadcaster-system"
+          name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
 
     <include>
       <uri>model://base_models/ground_plane</uri>
@@ -13,12 +30,6 @@
     <scene>
       <shadows>false</shadows>
     </scene>
-    <plugin
-      filename="gz-sim-sensors-system"
-      name="gz::sim::systems::Sensors">
-      <render_engine>ogre2</render_engine>
-    </plugin>
-
     <gui fullscreen='0'>
       <camera name='user_camera'>
         <pose>-2.04732 3.56191 2.92284 -0 0.349796 -0.733626</pose>
@@ -111,11 +122,16 @@
       <pose>-44.1 0.0 0.0 0.0 0.0 3.1416</pose>
       <uri>model://base_models/gleis_ende</uri>
     </include>
+
+    
+
+
+
       
     
 <!-- """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" Kies Boden  """"""""""""""""""""""""""""""""""""""""""""""""""""""" -->    
 
-    <!-- <include>
+    <include>
       <pose>50 -1 0.01 0 0 1.571</pose>
       <name>untergrund_kies01</name>
       <uri>model://base_models/untergrund_kies</uri>
@@ -234,12 +250,11 @@
     </include>
 
 
-        -->
    
 <!-- """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" Gras Boden  """"""""""""""""""""""""""""""""""""""""""""""""""""""" -->
 
 
-    <!-- <include>
+    <include>
       <pose>36.5 2.5 0.012 0 0 1.571</pose>
       <name>untergrund_gras01</name>
       <uri>model://base_models/untergrund_gras</uri>
@@ -340,7 +355,104 @@
       <pose>-47.5 -22.6 0.012 0 0 1.571</pose>
       <name>untergrund_gras17</name>
       <uri>model://base_models/untergrund_gras</uri>
-    </include> -->
+    </include>
+
+
+    <!-- Added By david Horn -->
+    <include>
+      <uri>model://base_models/pine_tree</uri>
+      <pose>12.0 2.5 0 0 0 0</pose>
+      <name>pine_tree_trackside_1</name>
+    </include>
+
+    <include>
+      <uri>model://base_models/pine_tree</uri>
+      <pose>13.5 2.5 0 0 0 0</pose>
+      <name>pine_tree_trackside_2</name>
+    </include>
+
+    <include>
+      <uri>model://base_models/pine_tree</uri>
+      <pose>15.0 2.5 0 0 0 0</pose>
+      <name>pine_tree_trackside_3</name>
+    </include>
+
+  <model name="sphere_1">
+  <static>true</static>
+  <pose>8.0 -3.0 0.6 0 0 0</pose>
+  <link name="link">
+    <collision name="collision">
+      <geometry>
+        <sphere>
+          <radius>1</radius>
+        </sphere>
+      </geometry>
+    </collision>
+
+    <visual name="visual">
+      <geometry>
+        <sphere>
+          <radius>1</radius>
+        </sphere>
+      </geometry>
+      <material>
+        <ambient>0.35 0.22 0.10 1</ambient>
+        <diffuse>0.35 0.22 0.10 1</diffuse>
+      </material>
+    </visual>
+  </link>
+</model>
+<model name="box_1">
+  <static>true</static>
+  <pose>5.0 2 0.5 0 0 0</pose> <!-- x y z roll pitch yaw -->
+  <link name="link">
+    <collision name="collision">
+      <geometry>
+        <box>
+          <size>2 2 2</size>
+        </box>
+      </geometry>
+    </collision>
+
+    <visual name="visual">
+      <geometry>
+        <box>
+          <size>1 1 2</size>
+        </box>
+      </geometry>
+      <material>
+        <ambient>0.35 0.22 0.10 1</ambient>
+        <diffuse>0.35 0.22 0.10 1</diffuse>
+      </material>
+    </visual>
+  </link>
+</model>
+<!-- 
+<include>
+      <uri>model://base_models/walking_actor</uri>
+      <pose>20.0 -1 1 0 0 0</pose>
+      <name>walking_actor</name>
+</include> -->
+
+<include>
+      <uri>model://base_models/spiderman</uri>
+      <pose>5.0 -2.5 0 0 0 0</pose>
+      <name>spiderman</name>
+      <scale>5 5 5</scale>
+</include>
+
+<include>
+      <uri>model://base_models/Apartment</uri>
+      <pose>35 -8 0 0 0 -1.57</pose>
+      <name>house_1</name>
+</include>
+<!-- <include>
+      <uri>model://base_models/house_3</uri>
+      <pose>30 5 0 0 0 0</pose>
+      <name>house_3</name>
+</include> -->
+
+
 
   </world>
 </sdf>

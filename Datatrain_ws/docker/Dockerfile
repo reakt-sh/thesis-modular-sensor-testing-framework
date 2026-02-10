@@ -43,6 +43,14 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* && \
     ros-jazzy-ros-gz \
  && rm -rf /var/lib/apt/lists/*
 
+ # Foxglove WebSocket bridge (ROS → Foxglove Studio)
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    apt-get update --fix-missing && \
+    apt-get install -y --no-install-recommends \
+    ros-jazzy-foxglove-bridge \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN apt install ros-jazzy-teleop-twist-keyboard
 # rosdep setup
 RUN rosdep init || true && rosdep update
 

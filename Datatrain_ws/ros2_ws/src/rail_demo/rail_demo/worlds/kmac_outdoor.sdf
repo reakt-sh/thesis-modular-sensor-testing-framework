@@ -145,36 +145,36 @@
 
     <include>
       <pose>6.5 -9.0 0 0 0 0</pose>
-      <uri>model://kmac</uri>
+      <uri>model://base_models/kmac</uri>
     </include>    
 
     <include>
       <pose> 0 0 0 0 0 -1.570796</pose>
-      <uri>model://gleis</uri>
+      <uri>model://base_models/gleis</uri>
       <name>gleis_0</name>
     </include>    
 
     <include>
       <pose> 8.82 -0.0018 0 0 0 -1.570796</pose>
-      <uri>model://gleis</uri>
+      <uri>model://base_models/gleis</uri>
       <name>gleis_1</name>
     </include>
 
     <include>
       <pose> 17.64 -0.0036 0 0 0 -1.570796</pose>
-      <uri>model://gleis</uri>
+      <uri>model://base_models/gleis</uri>
       <name>gleis_2</name>
     </include>     
 
     <include>
       <pose> -8.82 0.0018 0 0 0 -1.570796</pose>
-      <uri>model://gleis</uri>
+      <uri>model://base_models/gleis</uri>
       <name>gleis_3</name>
     </include>  
      
     <include>
       <pose>15.0 0.015 0.13 0.0 0.0 -1.570796</pose>
-      <uri>model://gazebo_train</uri>
+      <uri>model://base_models/gazebo_train</uri>
     </include>   
 
   </world>

@@ -1,2 +1,11 @@
 assignments:
-  top_aoi_plane_r1_c1: lidar_simple
+  top_aoi_plane_r1_c2: lidar_1
+  #top_aoi_plane_r1_c1: imu_base
+  #top_aoi_plane_r1_c0: navsat_base
+  front_aoi_plane_r0_c0: camera_1
+  front_aoi_plane_r1_c1: camera_depth_1
+  front_aoi_plane_r1_c2: lidar_2
+  #right_aoi_plane_r1_c1: lidar_3
+  #right_aoi_plane_r2_c0: camera_2
+  
+

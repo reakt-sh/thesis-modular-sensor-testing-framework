@@ -13,6 +13,7 @@ services:
     ports:
       - "127.0.0.1:5901:5901"
       - "127.0.0.1:6080:6080"
+      - "127.0.0.1:8765:8765"   # <-- Foxglove WebSocket
     volumes:
       # my ROS workspace (edit locally, build inside)
       - ../ros2_ws:/ws

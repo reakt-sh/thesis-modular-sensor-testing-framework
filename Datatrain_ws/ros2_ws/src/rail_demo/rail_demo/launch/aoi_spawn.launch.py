@@ -8,7 +8,11 @@ import subprocess
 import math
 import time
 
+
+# ----------------------------
 # Math utilities
+# ----------------------------
+
 def quaternion_from_rpy(roll, pitch, yaw):
     cr = math.cos(roll * 0.5)
     sr = math.sin(roll * 0.5)
@@ -24,11 +28,11 @@ def quaternion_from_rpy(roll, pitch, yaw):
 
     return (qx, qy, qz, qw)
 
-
 def rotate_vector_by_quaternion(v, q):
     x, y, z = v
     qx, qy, qz, qw = q
 
+    # Quaternion-vector multiplication (q * v * q^-1)
     ix =  qw * x + qy * z - qz * y
     iy =  qw * y + qz * x - qx * z
     iz =  qw * z + qx * y - qy * x
@@ -40,21 +44,9 @@ def rotate_vector_by_quaternion(v, q):
 
     return (rx, ry, rz)
 
-
-def multiply_quaternions(q1, q2):
-    x1, y1, z1, w1 = q1
-    x2, y2, z2, w2 = q2
-
-    x = w1*x2 + x1*w2 + y1*z2 - z1*y2
-    y = w1*y2 - x1*z2 + y1*w2 + z1*x2
-    z = w1*z2 + x1*y2 - y1*x2 + z1*w2
-    w = w1*w2 - x1*x2 - y1*y2 - z1*z2
-
-    return (x, y, z, w)
-
-
-
-# Gazebo service helpers
+# ----------------------------
+# Gazebo helpers
+# ----------------------------
 
 def delete_entity(entity_name):
     cmd = (
@@ -63,12 +55,10 @@ def delete_entity(entity_name):
         f"\"{{entity: {{name: '{entity_name}', type: 2}}}}\""
     )
     subprocess.run(cmd, shell=True)
-    time.sleep(0.1)
+    time.sleep(0.01)
+
 
 def list_gazebo_models():
-    """
-    Returns a list of model names currently in the Gazebo world.
-    """
     result = subprocess.run(
         ["gz", "model", "--list"],
         capture_output=True,
@@ -77,35 +67,19 @@ def list_gazebo_models():
 
     models = []
     for line in result.stdout.splitlines():
-        line = line.strip()
-        if line.startswith("- "):
-            models.append(line[2:])
-
+        if line.strip().startswith("- "):
+            models.append(line.strip()[2:])
     return models
 
+
 def delete_all_aoi_entities():
-    """
-    Deletes all Gazebo models whose name contains 'aoi'
-    (case-insensitive), repeating until none remain.
-    """
-    while True:
-        models = list_gazebo_models()
-
-        aoi_models = [
-            m for m in models
-            if "aoi" in m.lower()
-        ]
-
-        if not aoi_models:
-            break  # fully clean
-
-        for name in aoi_models:
-            delete_entity(name)
-
-        time.sleep(0.1)
+    models = list_gazebo_models()
+    for m in models:
+        if "aoi" in m.lower():
+            delete_entity(m)
 
 
-def spawn_plane_entity(entity_name, sdf_filename, position, orientation):
+def spawn_entity(entity_name, sdf_filename, position, orientation):
     x, y, z = position
     qx, qy, qz, qw = orientation
 
@@ -123,21 +97,12 @@ def spawn_plane_entity(entity_name, sdf_filename, position, orientation):
     )
 
     subprocess.run(cmd, shell=True)
-    time.sleep(0.1)
+    time.sleep(0.01)
 
 
-# AOI SDF generator
-
-def get_grid_point_sdf_path():
-    pkg_share = get_package_share_directory("rail_demo")
-    return os.path.join(
-        pkg_share,
-        "models",
-        "generated_aois",
-        "grid_point",
-        "model.sdf"
-    )
-
+# ----------------------------
+# SDF helpers
+# ----------------------------
 
 def generate_plane_sdf(entity_name, width, depth, color):
     thickness = 0.01
@@ -160,292 +125,148 @@ def generate_plane_sdf(entity_name, width, depth, color):
       </visual>
     </link>
   </model>
-</sdf>"""
+</sdf>
+"""
 
 
-def write_sdf_to_model_folder(sdf_xml):
-    pkg_share = get_package_share_directory("rail_demo")
-
-    model_dir = os.path.join(
-        pkg_share,
-        "rail_demo",
-        "models",
-        "generated_aois",
-        "top"
-    )
-
+def write_plane_model(entity_name, sdf_xml):
+    pkg = get_package_share_directory("rail_demo")
+    model_dir = os.path.join(pkg, "models", "generated_aois", entity_name)
     os.makedirs(model_dir, exist_ok=True)
 
     sdf_path = os.path.join(model_dir, "model.sdf")
-
     with open(sdf_path, "w", encoding="utf-8") as f:
         f.write(sdf_xml)
 
     return sdf_path
 
 
-# centered grid generation 
+def get_grid_point_sdf():
+    pkg = get_package_share_directory("rail_demo")
+    return os.path.join(
+        pkg, "models", "generated_aois", "grid_point", "model.sdf"
+    )
+
+
+# ----------------------------
+# Grid logic (LOCAL to AOI)
+# ----------------------------
+
 def generate_centered_grid_points(width, depth, rows, cols):
-    """
-    Generate centered grid points on an AOI plane in the AOI-local frame.
-
-    Plane-local frame:
-      x ∈ [-width/2, +width/2]
-      y ∈ [-depth/2, +depth/2]
-      z = 0
-
-    Returns:
-      List of (row, col, (x, y, z))
-    """
     points = []
-
     dx = width / cols
     dy = depth / rows
 
     for r in range(rows):
         for c in range(cols):
-            x = -width / 2.0 + (c + 0.5) * dx
-            y = -depth / 2.0 + (r + 0.5) * dy
-            z = 0.0
-            points.append((r, c, (x, y, z)))
+            x = -width / 2 + (c + 0.5) * dx
+            y = -depth / 2 + (r + 0.5) * dy
+            points.append((r, c, (x, y, 0.0)))
 
     return points
 
-# Logic for Grid Points generted on Aoi
-def transform_grid_points_to_world(
-    grid_points,
-    aoi_q_local,
-    aoi_offset_local,
-    train_q,
-    train_pos
-):
-    """
-    Transform AOI-local grid points into train and world frames.
 
-    Returns:
-      List of dicts with:
-        - row, col
-        - position_train
-        - position_world
-    """
-    transformed = []
+# ----------------------------
+# YAML export
+# ----------------------------
 
-    for r, c, p_local in grid_points:
-        # Rotate by AOI orientation (still in train frame)
-        p_aoi_rot = rotate_vector_by_quaternion(p_local, aoi_q_local)
-
-        # Translate by AOI offset (train frame)
-        p_train = (
-            p_aoi_rot[0] + aoi_offset_local[0],
-            p_aoi_rot[1] + aoi_offset_local[1],
-            p_aoi_rot[2] + aoi_offset_local[2],
-        )
-
-        # Rotate by train orientation (world frame)
-        p_world_rot = rotate_vector_by_quaternion(p_train, train_q)
-
-        # Translate by train position
-        p_world = (
-            p_world_rot[0] + train_pos[0],
-            p_world_rot[1] + train_pos[1],
-            p_world_rot[2] + train_pos[2],
-        )
-
-        transformed.append({
-            "row": r,
-            "col": c,
-            "position_train": p_train,
-            "position_world": p_world,
-        })
-
-    return transformed
-
-#Yaml logic 
 def write_sensor_positions_yaml(slots):
-    data = {
-        "slots": slots
-    }
+    pkg = get_package_share_directory("rail_demo")
+    path = os.path.join(pkg, "config", "generated_sensor_positions.yaml")
 
-    # --- 1) Write to install space (ROS runtime) ---
-    pkg_share = get_package_share_directory("rail_demo")
-    install_path = os.path.join(
-        pkg_share,
-        "config",
-        "generated_sensor_positions.yaml"
-    )
+    with open(path, "w", encoding="utf-8") as f:
+        yaml.safe_dump({"slots": slots}, f, sort_keys=False)
 
-    os.makedirs(os.path.dirname(install_path), exist_ok=True)
+    print(f"[AOI] Wrote sensor slots → {path}")
 
-    with open(install_path, "w", encoding="utf-8") as f:
-        yaml.safe_dump(
-            data,
-            f,
-            sort_keys=False,
-            default_flow_style=False
-        )
 
-    print(f"[AOI] Wrote sensor positions to install: {install_path}")
-    print("[AOI] NOTE: Copy generated_sensor_positions.yaml from install/ to src/ if you want to version it")   
-
-    # --- 2) Write to src space (developer / version control) ---
-    # src_path = os.path.join(
-    #     os.getcwd(),                  # /ws
-    #     "src",
-    #     "rail_demo",
-    #     "rail_demo",
-    #     "config",
-    #     "generated_sensor_positions.yaml"
-    # )
-
-    # if os.path.isdir(os.path.dirname(src_path)):
-    #     with open(src_path, "w", encoding="utf-8") as f:
-    #         yaml.safe_dump(
-    #             data,
-    #             f,
-    #             sort_keys=False,
-    #             default_flow_style=False
-    #         )
-    #     print(f"[AOI] Wrote sensor positions to src: {src_path}")
-    # else:
-    #     print("[AOI] Src config directory not found, skipping src write")
-
-# Main launch logic
+# ----------------------------
+# Main logic
+# ----------------------------
 
 def spawn_aois(context):
-    pkg_share = get_package_share_directory("rail_demo")
-    yaml_path = os.path.join(pkg_share, "config", "aois.yaml")
+    pkg = get_package_share_directory("rail_demo")
+    cfg_path = os.path.join(pkg, "config", "aois.yaml")
 
-    with open(yaml_path, "r") as f:
+    with open(cfg_path, "r") as f:
         cfg = yaml.safe_load(f)
 
-    sensor_slots = [] #collect for sensor yaml export
+    delete_all_aoi_entities()
 
-    # ---- Train pose (trusted from YAML) ----
-    train = cfg["train_spawn"]
+    grid_sdf = get_grid_point_sdf()
+    sensor_slots = []
 
-    train_pos = (train["x"], train["y"], train["z"])
-    train_q = quaternion_from_rpy(
-        train["R"], train["P"], train["Y"]
-    )
+    for aoi in cfg["aoi"].values():
+        name = aoi["entity_name"]
 
-    # Pre-resolve grid point model path (static, reused)
-    grid_point_sdf = get_grid_point_sdf_path()
-
-    # ---- Iterate AOIs ----
-    for _, aoi in cfg.get("aoi", {}).items():
-        entity_name = aoi["entity_name"]
-
-        # ---- Delete existing AOI plane ----
-        delete_entity(entity_name)
-
-        # ---- AOI offset and orientation (train frame) ----
-        offset = aoi["offset"]
-        offset_local = (offset["x"], offset["y"], offset["z"])
-
-        rpy = aoi["orientation_rpy"]
-        aoi_q_local = quaternion_from_rpy(
-            rpy["roll"], rpy["pitch"], rpy["yaw"]
+        pose = aoi["pose"]
+        pos_world = (pose["x"], pose["y"], pose["z"])
+        q_world = quaternion_from_rpy(
+            pose["roll"], pose["pitch"], pose["yaw"]
         )
 
-        # ---- AOI pose in world frame ----
-        offset_world = rotate_vector_by_quaternion(offset_local, train_q)
-        aoi_pos_world = (
-            train_pos[0] + offset_world[0],
-            train_pos[1] + offset_world[1],
-            train_pos[2] + offset_world[2],
-        )
-
-        aoi_q_world = multiply_quaternions(train_q, aoi_q_local)
-
-        # ---- AOI parameters ----
         size = aoi["size"]
         color = aoi.get("visual", {}).get("color", [0.2, 0.8, 0.2, 0.4])
 
-       
-        # AOI grid computation + visualization
-    
-        grid_cfg = aoi.get("grid", None)
-        if grid_cfg:
-            # Generate centered grid points (AOI-local)
-            grid_points_local = generate_centered_grid_points(
-                width=size["width"],
-                depth=size["depth"],
-                rows=grid_cfg["rows"],
-                cols=grid_cfg["cols"],
+        sdf_xml = generate_plane_sdf(
+            name, size["width"], size["depth"], color
+        )
+        sdf_path = write_plane_model(name, sdf_xml)
+
+        spawn_entity(name, sdf_path, pos_world, q_world)
+
+        if "grid" in aoi:
+            grid = aoi["grid"]
+            local_pts = generate_centered_grid_points(
+                size["width"], size["depth"],
+                grid["rows"], grid["cols"]
             )
+            for r, c, p_local in local_pts:
+                dot_name = f"{name}_r{r}_c{c}"
 
-            # Transform grid points into train/world frames
-            grid_points_world = transform_grid_points_to_world(
-                grid_points=grid_points_local,
-                aoi_q_local=aoi_q_local,
-                aoi_offset_local=offset_local,
-                train_q=train_q,
-                train_pos=train_pos,
-            )
+                # 1. Rotate local grid point by AOI orientation
+                p_rot = rotate_vector_by_quaternion(p_local, q_world)
 
-            delete_all_aoi_entities()
-            # Spawn grid point visualization markers
-            for gp in grid_points_world:
-                r = gp["row"]
-                c = gp["col"]
-                pos = gp["position_world"]
-                pos_train = gp["position_train"]
+                # 2. Translate into world space (relative to AOI center)
+                p_world = (
+                    pos_world[0] + p_rot[0],
+                    pos_world[1] + p_rot[1],
+                    pos_world[2] + p_rot[2],
+                )
 
-                grid_name = f"{entity_name}_grid_r{r}_c{c}"
+                # 3. Spawn grid dot at unique world pose
+                spawn_entity(
+                    dot_name,
+                    grid_sdf,
+                    p_world,
+                    q_world
+                )
 
                 sensor_slots.append({
-                    "name": f"{entity_name}_r{r}_c{c}",
-                    "aoi": entity_name,
-                    "grid": {
-                        "row": r,
-                        "col": c,
-                    },
+                    "name": f"{name}_r{r}_c{c}",
+                    "aoi": name,
+                    "grid": {"row": r, "col": c},
                     "pose": {
-                        "x": round(pos_train[0], 6),
-                        "y": round(pos_train[1], 6),
-                        "z": round(pos_train[2], 6),
-                        "roll": 0.0,
-                        "pitch": 0.0,
-                        "yaw": 0.0,
+                        # WORLD position (authoritative)
+                        "x": round(p_world[0], 6),
+                        "y": round(p_world[1], 6),
+                        "z": round(p_world[2], 6),
+
+                        # Inherit AOI orientation (Option A)
+                        "roll": round(pose["roll"], 6),
+                        "pitch": round(pose["pitch"], 6),
+                        "yaw": round(pose["yaw"], 6),
                     },
                     "sensor": None
                 })
 
-                # Spawn static grid marker
-                spawn_plane_entity(
-                    grid_name,
-                    grid_point_sdf,
-                    pos,
-                    (0.0, 0.0, 0.0, 1.0)
-                )
 
-      
-        # AOI plane spawning
-       
-        sdf_xml = generate_plane_sdf(
-            entity_name,
-            size["width"],
-            size["depth"],
-            color
-        )
-
-        sdf_path = write_sdf_to_model_folder(sdf_xml)
-
-        
-
-        spawn_plane_entity(
-            entity_name,
-            sdf_path,
-            aoi_pos_world,
-            aoi_q_world
-        )
-        write_sensor_positions_yaml(sensor_slots)
-
+    #write_sensor_positions_yaml(sensor_slots)
     return []
 
 
 def generate_launch_description():
     return LaunchDescription([
-        LogInfo(msg="AOI spawn launch: deleting and respawning AOIs from YAML"),
+        LogInfo(msg="AOI spawn v2: world-pose-based AOI placement"),
         OpaqueFunction(function=spawn_aois),
     ])

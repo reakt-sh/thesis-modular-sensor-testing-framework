@@ -1,0 +1,39 @@
+model {
+  file: "model.sdf"
+}
+name: "SpiderMan_Titan_Hero_12Inch_Action_Figure_oo1qph4wwiW"
+description: "Spider-Man Titan Hero 12-Inch Action Figure\nSpider-Man Titan Hero 12-Inch Action Figure Hasbro Spider-Man Action Figures One bite from a radioactive spider changed Peter Parker\'s life forever, giving him super-human powers and amazing wall-crawling ability.  Wearing the mask that has made him a legend, he battles evil wherever a hero is needed as the one-and-only Spider-Man!  Super-size your super hero adventures with this incredible Titan Hero Series Ultimate Spider-Man figure!  This 12-inch web-slinging dynamo is ready to open up a large-sized attack on the foes of justice everywhere.  With him at your side, there\'s no telling where your adventures will take you!  Ages 4 and up."
+version: 1
+authors {
+  name: "Google"
+  email: "scanned-objects@google.com"
+}
+legal {
+  copyright: "Copyright 2020 Google LLC."
+  license: "Creative Commons Attribution 4.0 International"
+}
+annotations {
+  key: "brand"
+  value: "Hasbro"
+}
+annotations {
+  key: "gtin"
+  value: "00653569800361"
+}
+annotations {
+  key: "mpn"
+  value: "a1517"
+}
+annotations {
+  key: "sku"
+  value: "8965545_20130522_087-06-1468"
+}
+compatibilities {
+  name: "Gazebo"
+  version {
+    major: 11
+  }
+}
+categories {
+  first: "Action Figures"
+}

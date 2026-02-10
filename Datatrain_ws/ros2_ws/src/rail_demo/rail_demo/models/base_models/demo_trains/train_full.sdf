@@ -1,0 +1,928 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sdf version="1.7">
+   
+  <model name="reakt_train">
+  <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+  
+    <link name="base_footprint"/>
+    <link name="base_link">
+      <gravity>1</gravity>
+      <self_collide>0</self_collide>
+      <kinematic>0</kinematic>
+      <enable_wind>0</enable_wind>
+      <inertial>
+        <pose>0 0 0.1 0 0 0</pose>
+        <mass>3</mass>
+        <inertia>
+          <ixx>0.6</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.2</iyy>
+          <iyz>0</iyz>
+          <izz>0.6</izz>
+        </inertia>
+      </inertial>
+      <collision name="base_footprint_fixed_joint_lump__base_link_collision">
+        <pose>0 0 0.45 0 0 1.57</pose>
+        <geometry>
+          <mesh>
+            <scale>0.001 0.0025 0.005</scale>
+            <uri>model://reakt_train/meshes/Reakt_Concept_Model_.obj</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="base_footprint_fixed_joint_lump__base_link_visual">
+        <pose>0 0 0.45 0 0 1.57</pose>
+        <geometry>
+          <mesh>
+            <scale>0.01 0.0025 0.005</scale>
+            <uri>model://reakt_train/meshes/Reakt_Concept_Model_.obj</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular> 
+        </material>
+      </visual>
+    </link>       
+
+    <joint name="base_joint" type="fixed">
+      <parent>base_footprint</parent>
+      <child>base_link</child>
+      <pose>0.0 0.0 0.3 0 0 0</pose>
+    </joint>
+
+             
+    <joint name="wheel_left2_joint" type="revolute">
+      <pose relative_to="base_footprint">-0.22 0.4 0.1 -1.5708 0 0</pose>
+      <parent>base_link</parent>
+      <child>wheel_left2_link</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="wheel_left2_link">
+      <pose relative_to="wheel_left2_joint">0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 -1.5708 -0 0</pose>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>2.9925e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>5.445e-06</iyy>
+          <iyz>0</iyz>
+          <izz>5.445e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name="wheel_left2_link_collision">
+        <pose>0 0 0 -1.5708 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://reakt_train/meshes/left_tire.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>      
+      </collision>
+      <visual name="wheel_left2_link_visual">
+        <pose>0 0 0 1.5708 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://reakt_train/meshes/left_tire.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+         <ambient>0 0 1 1</ambient>
+        <diffuse>0 0 1 1</diffuse>
+        <specular>0.1 0.1 0.1 1</specular>
+        </material>        
+      </visual>
+    </link>
+    <joint name="wheel_left_joint" type="revolute">
+      <pose relative_to="base_footprint">-0.22 -0.4 0.1 -1.5708 0 0</pose>
+      <parent>base_link</parent>
+      <child>wheel_left_link</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="wheel_left_link">
+      <pose relative_to="wheel_left_joint">0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 -1.5708 -0 0</pose>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>2.9925e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>5.445e-06</iyy>
+          <iyz>0</iyz>
+          <izz>5.445e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name="wheel_left_link_collision">
+        <pose>0 0 0 -1.5708 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://reakt_train/meshes/left_tire.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+      
+      </collision>
+      <visual name="wheel_left_link_visual">
+        <pose>0 0 0 1.5708 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://reakt_train/meshes/left_tire.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0 0 1 1</ambient>
+          <diffuse>0 0 1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>        
+      </visual>
+    </link>
+    <joint name="wheel_right2_joint" type="revolute">
+      <pose relative_to="base_footprint">0.22 0.4 0.1 -1.5708 -0 -3.14159</pose>
+      <parent>base_link</parent>
+      <child>wheel_right2_link</child>
+      <axis>
+        <xyz>-1 0 0</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="wheel_right2_link">
+      <pose relative_to="wheel_right2_joint">0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 -1.5708 0 0</pose>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>2.9925e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>5.445e-06</iyy>
+          <iyz>0</iyz>
+          <izz>5.445e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name="wheel_right2_link_collision">
+        <pose>0 0 0 -1.5708 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://reakt_train/meshes/right_tire.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+     
+      </collision>
+      <visual name="wheel_right2_link_visual">
+        <pose>0 0 0 1.5708 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://reakt_train/meshes/right_tire.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+            <ambient>0 0 1 1</ambient>
+            <diffuse>0 0 1 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+        </material>        
+      </visual>
+    </link>
+    <joint name="wheel_right_joint" type="revolute">
+      <pose relative_to="base_footprint">0.22 -0.4 0.1 -1.5708 -0 -3.14159</pose>
+      <parent>base_link</parent>
+      <child>wheel_right_link</child>
+      <axis>
+        <xyz>-1 0 0</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="wheel_right_link">
+      <pose relative_to="wheel_right_joint">0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 -1.5708 -0 0</pose>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>2.9925e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>5.445e-06</iyy>
+          <iyz>0</iyz>
+          <izz>5.445e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name="wheel_right_link_collision">
+        <pose>0 0 0 -1.5708 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://reakt_train/meshes/right_tire.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0</slip1>
+              <slip2>0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>1</coefficient>
+              <patch_radius>0</patch_radius>
+              <surface_radius>0</surface_radius>
+              <use_patch_radius>1</use_patch_radius>
+              <ode>
+                <slip>0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0</restitution_coefficient>
+            <threshold>1e+06</threshold>
+          </bounce>
+          <contact>
+            <collide_without_contact>0</collide_without_contact>
+            <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+              <max_vel>0.01</max_vel>
+              <min_depth>0</min_depth>
+            </ode>
+            <bullet>
+              <split_impulse>1</split_impulse>
+              <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+              <soft_cfm>0</soft_cfm>
+              <soft_erp>0.2</soft_erp>
+              <kp>1e+13</kp>
+              <kd>1</kd>
+            </bullet>
+          </contact>
+        </surface>
+     
+      </collision>
+      <visual name="wheel_right_link_visual">
+        <pose>0 0 0 1.5708 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://reakt_train/meshes/right_tire.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0 0 1 1</ambient>
+          <diffuse>0 0 1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>        
+      </visual>
+    </link>
+
+
+<!-- AUTO-GENERATED SENSOR LINKS -->
+<!-- END AUTO-GENERATED SENSOR LINKS -->
+
+    
+    <link name="lidar_1_top_aoi_plane_r1_c2_link">
+  <pose>0.017946 -0.266671 1.65 0.0 0.0 0.0</pose>
+  <gravity>false</gravity>
+  <mass>0.01</mass>
+  <inertia>
+  <ixx>1e-4</ixx>
+  <iyy>1e-4</iyy>
+  <izz>1e-4</izz>
+  <ixy>0</ixy>
+  <ixz>0</ixz>
+  <iyz>0</iyz>
+</inertia>
+<visual name="lidar_body_visual">
+            <geometry>
+                <cylinder>
+                <radius>0.03</radius>
+                <length>0.05</length>
+                </cylinder>
+            </geometry>
+            <material>
+                <ambient>0.0 0.0 0.0 1</ambient>
+                <diffuse>0.0 0.0 0.0 1</diffuse>
+            </material>
+            </visual>
+
+  <sensor name="lidar_1" type="gpu_lidar">
+    <pose>0 0 0 0 0 0</pose>
+    <topic>lidar</topic>
+    <update_rate>10.0</update_rate>
+    <always_on>true</always_on>
+    <visualize>true</visualize>
+
+    <ray>
+      <scan>
+        <horizontal>
+          <samples>4096</samples>
+          <resolution>1.0</resolution>
+          <min_angle>-3.1415925</min_angle>
+          <max_angle>3.1415925</max_angle>
+        </horizontal>
+        <vertical>
+          <samples>16</samples>
+          <resolution>1.0</resolution>
+          <min_angle>-0.175</min_angle>
+          <max_angle>0.175</max_angle>
+        </vertical>
+      </scan>
+
+      <range>
+        <min>0.8</min>
+        <max>120.0</max>
+        <resolution>0.01</resolution>
+      </range>
+    </ray>
+  </sensor>
+</link>
+
+<joint name="lidar_1_top_aoi_plane_r1_c2_joint" type="fixed">
+  <parent>base_link</parent>
+  <child>lidar_1_top_aoi_plane_r1_c2_link</child>
+</joint>
+
+
+<link name="imu_base_top_aoi_plane_r1_c1_link">
+  <pose>0.018 -4e-06 1.35 0.0 0.0 0.0</pose>
+  <gravity>false</gravity>
+  <mass>0.01</mass>
+  <inertia>
+  <ixx>1e-4</ixx>
+  <iyy>1e-4</iyy>
+  <izz>1e-4</izz>
+  <ixy>0</ixy>
+  <ixz>0</ixz>
+  <iyz>0</iyz>
+</inertia>
+<visual name="imu_body_visual">
+            <geometry>
+                <cylinder>
+                <radius>0.03</radius>
+                <length>0.05</length>
+                </cylinder>
+            </geometry>
+            <material>
+                <ambient>0.0 0.0 0.0 1</ambient>
+                <diffuse>0.0 0.0 0.0 1</diffuse>            
+            </material>
+            </visual>
+
+  <sensor name="imu_base" type="imu">
+    <topic>imu</topic>
+    <imu>
+      <angular_velocity>
+        <x>true</x>
+        <y>true</y>
+        <z>true</z>
+      </angular_velocity>
+      <linear_acceleration>
+        <x>true</x>
+        <y>true</y>
+        <z>true</z>
+      </linear_acceleration>
+    </imu>
+  </sensor>
+</link>
+
+<joint name="imu_base_top_aoi_plane_r1_c1_joint" type="fixed">
+  <parent>base_link</parent>
+  <child>imu_base_top_aoi_plane_r1_c1_link</child>
+</joint>
+
+
+<link name="navsat_base_top_aoi_plane_r1_c0_link">
+  <pose>0.018054 0.266663 1.35 0.0 0.0 0.0</pose>
+  <gravity>false</gravity>
+  <mass>0.01</mass>
+  <inertia>
+  <ixx>1e-4</ixx>
+  <iyy>1e-4</iyy>
+  <izz>1e-4</izz>
+  <ixy>0</ixy>
+  <ixz>0</ixz>
+  <iyz>0</iyz>
+</inertia>
+<visual name="navsat_body_visual">
+            <geometry>
+                <cylinder>
+                <radius>0.03</radius>
+                <length>0.05</length>
+                </cylinder>
+            </geometry>
+            <material>
+                <ambient>0.0 0.0 0.0 1</ambient>
+                <diffuse>0.0 0.0 0.0 1</diffuse>            
+            </material>
+            </visual>
+
+  <sensor name="navsat_base" type="navsat">
+    <topic>navsat</topic>
+  </sensor>
+</link>
+
+<joint name="navsat_base_top_aoi_plane_r1_c0_joint" type="fixed">
+  <parent>base_link</parent>
+  <child>navsat_base_top_aoi_plane_r1_c0_link</child>
+</joint>
+
+
+<link name="camera_1_front_aoi_plane_r0_c0_link">
+  <pose>-0.315537 -0.99983 0.133333 0.0 1.57 0.0</pose>
+  <gravity>false</gravity>
+  <mass>0.01</mass>
+  <inertia>
+  <ixx>1e-4</ixx>
+  <iyy>1e-4</iyy>
+  <izz>1e-4</izz>
+  <ixy>0</ixy>
+  <ixz>0</ixz>
+  <iyz>0</iyz>
+</inertia>
+<visual name="camera_body_visual">
+            <geometry>
+                <cylinder>
+                <radius>0.03</radius>
+                <length>0.05</length>
+                </cylinder>
+            </geometry>
+            <material>
+                <ambient>0.0 0.0 0.0 1</ambient>
+                <diffuse>0.0 0.0 0.0 1</diffuse>            
+            </material>
+            </visual>
+
+  <sensor name="camera_1" type="camera">
+    <pose>0 0 0 0 0 0</pose>
+    <topic>camera/image</topic>
+    <update_rate>30.0</update_rate>
+    <always_on>true</always_on>
+    <visualize>true</visualize>
+
+    <camera>
+      <horizontal_fov>2.094395</horizontal_fov>
+
+      <image>
+        <width>640</width>
+        <height>480</height>
+        <format>R8G8B8</format>
+      </image>
+
+      <clip>
+        <near>0.1</near>
+        <far>100.0</far>
+      </clip>
+    </camera>
+  </sensor>
+</link>
+
+<joint name="camera_1_front_aoi_plane_r0_c0_joint" type="fixed">
+  <parent>base_link</parent>
+  <child>camera_1_front_aoi_plane_r0_c0_link</child>
+</joint>
+
+
+<link name="camera_depth_1_front_aoi_plane_r1_c1_link">
+  <pose>0.017796 -1.000004 0.13333 0.0 1.57 0.0</pose>
+  <gravity>false</gravity>
+  <mass>0.01</mass>
+  <inertia>
+  <ixx>1e-4</ixx>
+  <iyy>1e-4</iyy>
+  <izz>1e-4</izz>
+  <ixy>0</ixy>
+  <ixz>0</ixz>
+  <iyz>0</iyz>
+</inertia>
+<visual name="camera_depth_body_visual">
+            <geometry>
+                <cylinder>
+                <radius>0.03</radius>
+                <length>0.05</length>
+                </cylinder>
+            </geometry>
+            <material>
+                <ambient>0.0 0.0 0.0 1</ambient>
+                <diffuse>0.0 0.0 0.0 1</diffuse>            
+            </material>
+            </visual>
+
+  <sensor name="camera_depth_1" type="depth_camera">
+    <update_rate>20.0</update_rate>
+    <topic>camera/front/depth</topic>
+
+    <camera>
+      <horizontal_fov>1.4</horizontal_fov>
+      <image>
+        <width>640</width>
+        <height>480</height>
+      </image>
+      <clip>
+        <near>0.2</near>
+        <far>30.0</far>
+      </clip>
+    </camera>
+  </sensor>
+</link>
+
+<joint name="camera_depth_1_front_aoi_plane_r1_c1_joint" type="fixed">
+  <parent>base_link</parent>
+  <child>camera_depth_1_front_aoi_plane_r1_c1_link</child>
+</joint>
+
+
+<link name="lidar_2_front_aoi_plane_r1_c2_link">
+  <pose>0.017796 -1.00011 0.1 0.0 1.57 0.0</pose>
+  <gravity>false</gravity>
+  <mass>0.01</mass>
+  <inertia>
+  <ixx>1e-4</ixx>
+  <iyy>1e-4</iyy>
+  <izz>1e-4</izz>
+  <ixy>0</ixy>
+  <ixz>0</ixz>
+  <iyz>0</iyz>
+</inertia>
+<visual name="lidar_body_visual">
+            <geometry>
+                <cylinder>
+                <radius>0.03</radius>
+                <length>0.05</length>
+                </cylinder>
+            </geometry>
+            <material>
+                <ambient>0.0 0.0 0.0 1</ambient>
+                <diffuse>0.0 0.0 0.0 1</diffuse>
+            </material>
+            </visual>
+
+  <sensor name="lidar_2" type="gpu_lidar">
+    <pose>0 0 0 0 0 0</pose>
+    <topic>lidar</topic>
+    <update_rate>10.0</update_rate>
+    <always_on>true</always_on>
+    <visualize>true</visualize>
+
+    <ray>
+      <scan>
+        <horizontal>
+          <samples>4096</samples>
+          <resolution>1.0</resolution>
+          <min_angle>-3.1415925</min_angle>
+          <max_angle>3.1415925</max_angle>
+        </horizontal>
+        <vertical>
+          <samples>16</samples>
+          <resolution>1.0</resolution>
+          <min_angle>-0.175</min_angle>
+          <max_angle>0.175</max_angle>
+        </vertical>
+      </scan>
+
+      <range>
+        <min>0.8</min>
+        <max>120.0</max>
+        <resolution>0.01</resolution>
+      </range>
+    </ray>
+  </sensor>
+</link>
+
+<joint name="lidar_2_front_aoi_plane_r1_c2_joint" type="fixed">
+  <parent>base_link</parent>
+  <child>lidar_2_front_aoi_plane_r1_c2_link</child>
+</joint>
+
+
+<link name="lidar_3_right_aoi_plane_r1_c1_link">
+  <pose>-0.482 9.8e-05 0.3 0.0 1.57 -1.57</pose>
+  <gravity>false</gravity>
+  <mass>0.01</mass>
+  <inertia>
+  <ixx>1e-4</ixx>
+  <iyy>1e-4</iyy>
+  <izz>1e-4</izz>
+  <ixy>0</ixy>
+  <ixz>0</ixz>
+  <iyz>0</iyz>
+</inertia>
+<visual name="lidar_body_visual">
+            <geometry>
+                <cylinder>
+                <radius>0.03</radius>
+                <length>0.05</length>
+                </cylinder>
+            </geometry>
+            <material>
+                <ambient>0.0 0.0 0.0 1</ambient>
+                <diffuse>0.0 0.0 0.0 1</diffuse>
+            </material>
+            </visual>
+
+  <sensor name="lidar_3" type="gpu_lidar">
+    <pose>0 0 0 0 0 0</pose>
+    <topic>lidar</topic>
+    <update_rate>10.0</update_rate>
+    <always_on>true</always_on>
+    <visualize>true</visualize>
+
+    <ray>
+      <scan>
+        <horizontal>
+          <samples>4096</samples>
+          <resolution>1.0</resolution>
+          <min_angle>-3.1415925</min_angle>
+          <max_angle>3.1415925</max_angle>
+        </horizontal>
+        <vertical>
+          <samples>16</samples>
+          <resolution>1.0</resolution>
+          <min_angle>-0.175</min_angle>
+          <max_angle>0.175</max_angle>
+        </vertical>
+      </scan>
+
+      <range>
+        <min>0.8</min>
+        <max>120.0</max>
+        <resolution>0.01</resolution>
+      </range>
+    </ray>
+  </sensor>
+</link>
+
+<joint name="lidar_3_right_aoi_plane_r1_c1_joint" type="fixed">
+  <parent>base_link</parent>
+  <child>lidar_3_right_aoi_plane_r1_c1_link</child>
+</joint>
+
+
+<link name="camera_2_right_aoi_plane_r2_c0_link">
+  <pose>-0.481537 -0.333235 0.633333 0.0 1.57 -1.57</pose>
+  <gravity>false</gravity>
+  <mass>0.01</mass>
+  <inertia>
+  <ixx>1e-4</ixx>
+  <iyy>1e-4</iyy>
+  <izz>1e-4</izz>
+  <ixy>0</ixy>
+  <ixz>0</ixz>
+  <iyz>0</iyz>
+</inertia>
+<visual name="camera_body_visual">
+            <geometry>
+                <cylinder>
+                <radius>0.03</radius>
+                <length>0.05</length>
+                </cylinder>
+            </geometry>
+            <material>
+                <ambient>0.0 0.0 0.0 1</ambient>
+                <diffuse>0.0 0.0 0.0 1</diffuse>            
+            </material>
+            </visual>
+
+  <sensor name="camera_2" type="camera">
+    <pose>0 0 0 0 0 0</pose>
+    <topic>camera/image</topic>
+    <update_rate>30.0</update_rate>
+    <always_on>true</always_on>
+    <visualize>true</visualize>
+
+    <camera>
+      <horizontal_fov>2.094395</horizontal_fov>
+
+      <image>
+        <width>640</width>
+        <height>480</height>
+        <format>R8G8B8</format>
+      </image>
+
+      <clip>
+        <near>0.1</near>
+        <far>100.0</far>
+      </clip>
+    </camera>
+  </sensor>
+</link>
+
+<joint name="camera_2_right_aoi_plane_r2_c0_joint" type="fixed">
+  <parent>base_link</parent>
+  <child>camera_2_right_aoi_plane_r2_c0_link</child>
+</joint>
+<plugin name="gz::sim::systems::DiffDrive" filename="gz-sim-diff-drive-system">
+
+      <ros>
+
+      </ros>
+
+      <update_rate>12</update_rate>
+
+      <!-- wheels -->
+      <left_joint>wheel_left_joint</left_joint>
+      <right_joint>wheel_right_joint</right_joint>
+
+
+      <!-- kinematics -->
+      <wheel_separation>0.44</wheel_separation>
+      <wheel_diameter>0.21</wheel_diameter>
+
+      <!-- limits -->
+      <max_wheel_torque>50</max_wheel_torque>
+      <max_wheel_acceleration>2.0</max_wheel_acceleration>
+
+      <command_topic>cmd_vel</command_topic>
+
+      <!-- output -->
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <publish_wheel_tf>false</publish_wheel_tf>
+
+      <odometry_topic>odom</odometry_topic>
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_footprint</robot_base_frame>
+
+    </plugin>
+    
+         	     
+  </model>
+</sdf>

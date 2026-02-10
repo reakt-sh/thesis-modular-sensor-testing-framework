@@ -20,14 +20,14 @@
         <geometry>
           <mesh>
             <uri>model://gleis/meshes/Gleisen.stl</uri>
-            <scale>0.001 0.001 0.001</scale>
+            <scale>0.002 0.002 0.001</scale>
           </mesh>
         </geometry>
         <material>
           <lighting>1</lighting>
-            <ambient>0.2 0.2 0.2 1</ambient>
-            <diffuse>0.3 0.3 0.3 1</diffuse>
-            <specular>0.1 0.1 0.1 1</specular>
+          <ambient>0.20 0.20 0.20 1</ambient>
+          <diffuse>0.30 0.30 0.30 1</diffuse>
+          <specular>0.15 0.15 0.15 1</specular>
           <!-- <script>
             <uri>file://media/materials/scripts/gazebo.material</uri>
             <name>Gazebo/Grey</name>
@@ -42,7 +42,7 @@
         <geometry>
           <mesh>
             <uri>model://gleis/meshes/Gleisen.stl</uri>
-            <scale>0.001 0.001 0.001</scale>
+            <scale>0.002 0.002 0.001</scale>
           </mesh>
         </geometry>
       </collision>
