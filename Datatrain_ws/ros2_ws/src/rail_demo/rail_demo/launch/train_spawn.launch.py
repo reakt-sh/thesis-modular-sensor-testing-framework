@@ -78,7 +78,7 @@ def generate_launch_description():
             '-world', world_name,
             '-name', 'train',
             '-file', model,
-            '-x', '10.0', '-y', '-0.018', '-z', '0.1',
+            '-x', '0.0', '-y', '0', '-z', '0.3',
             '-R', '0.0', '-P', '0.0', '-Y', '1.571',
         ],
     ),
