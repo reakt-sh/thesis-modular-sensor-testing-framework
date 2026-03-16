@@ -43,7 +43,7 @@ def delete_train_action(context):
 def generate_launch_description():
     pkg_share = get_package_share_directory('rail_demo')
    
-    model = os.path.join(pkg_share, 'models','base_models', 'reakt_train', 'model.sdf')
+    model = os.path.join(pkg_share, 'models','base_models', 'gazebo_train', 'model.sdf')
 
     models_path = os.path.join(pkg_share, 'models')
 
