@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Prepares the demo runtime environment by sourcing ROS2,
+# building the workspace, and sourcing the workspace overlay
+# so the framework can be launched in a consistent setup.
+
+
 # Config — change if your paths differ
 WS_DIR="${WS_DIR:-/ws}"
 ROS_SETUP="/opt/ros/jazzy/setup.bash"

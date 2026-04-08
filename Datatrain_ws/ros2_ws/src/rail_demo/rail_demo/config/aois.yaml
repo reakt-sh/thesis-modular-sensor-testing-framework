@@ -1,15 +1,4 @@
 # pi assumed 3.14159
-
-# (Optional legacy, no longer used by aoi_spawn2)
-train_spawn:
-  x: 0.0
-  y: -0.018
-  z: 0.1
-  R: 0.0
-  P: 0.0
-  Y: 1.571
-
-
 aoi:
   top:
     entity_name: top_aoi_plane
@@ -22,19 +11,19 @@ aoi:
 
     # World pose (copied from Gazebo UI)
     pose:
-      x: 0.0
+      x: 0.1
       y: 0.0
-      z: 1.65
+      z: 1.29
       roll: 0.0
       pitch: 0.0
       yaw: 0.0
 
     visual:
-      color: [0.2, 0.8, 0.2, 0.4]
+      color: [0.10, 0.25, 0.85, 0.60]
 
     grid:
-      rows: 3
-      cols: 3
+      rows: 4
+      cols: 4
 
 
   front:
@@ -43,24 +32,24 @@ aoi:
 
     # Rectangle facing forward
     size:
-      width: 0.4
+      width: 0.3
       depth: 1
 
     # World pose (copied from Gazebo UI)
     pose:
-      x: 1.0
+      x: 1.25
       y: 0.0
-      z: 0.4
+      z: 0.62
       roll: 0.0
       pitch: 1.57
       yaw: 0.0
 
     visual:
-      color: [0.2, 0.2, 0.8, 0.4]
+      color: [0.95, 0.80, 0.10, 0.60]
 
     grid:
       rows: 3
-      cols: 3
+      cols: 2
 
   # left:
   #   entity_name: left_aoi_plane
@@ -84,31 +73,31 @@ aoi:
   #     color: [0.8, 0.2, 0.2, 0.4]
 
   #   grid:
-  #     rows: 3
-  #     cols: 3
+  #     rows: 2
+  #     cols: 2
 
 
-  # right:
-  #   entity_name: right_aoi_plane
-  #   description: "Right side AOI plane for lateral sensors"
+  right:
+    entity_name: right_aoi_plane
+    description: "Right side AOI plane for lateral sensors"
 
-  #   # Vertical plane on the right side of the train
-  #   size:
-  #     width: 1
-  #     depth: 1
+    # Vertical plane on the right side of the train
+    size:
+      width: 0.5
+      depth: 1
 
-  #   # World pose (relative to train)
-  #   pose:
-  #     x: 0.0
-  #     y: -0.5       # right side (negative Y)
-  #     z: 0.7        # mid-height of train body
-  #     roll: 0.0
-  #     pitch: 1.57   # vertical plane
-  #     yaw: -1.57    # facing right
+    # World pose (relative to train)
+    pose:
+      x: 0.0
+      y: -0.5       # right side (negative Y)
+      z: 0.7        # mid-height of train body
+      roll: 0.0
+      pitch: 1.57   # vertical plane
+      yaw: -1.57    # facing right
 
-  #   visual:
-  #     color: [0.8, 0.8, 0.2, 0.4]
+    visual:
+      color: [1.0, 1.0, 1.0, 0.4]
 
-  #   grid:
-  #     rows: 3
-  #     cols: 3
+    grid:
+      rows: 2
+      cols: 5

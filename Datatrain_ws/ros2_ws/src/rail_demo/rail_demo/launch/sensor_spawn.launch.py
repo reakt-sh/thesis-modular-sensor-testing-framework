@@ -7,8 +7,8 @@ import os
 import yaml
 import subprocess
 import time
-from lxml import etree
 import math
+from lxml import etree
 
 # ==================================================
 # Package paths
@@ -20,12 +20,11 @@ pkg_share = get_package_share_directory(PKG_NAME)
 SENSORS_YAML_PATH = os.path.join(pkg_share, "config", "sensors.yaml")
 SENSOR_ASSIGNMENT_YAML_PATH = os.path.join(pkg_share, "config", "sensor_assignment.yaml")
 GENERATED_SENSOR_POS_YAML_PATH = os.path.join(
-    pkg_share, "config", "generated_sensor_positions.yaml"
+    pkg_share, "config", "generated_sensor_positions_relative.yaml"
 )
-
-BASE_TRAIN_SDF_PATH = os.path.join(
-    pkg_share, "models","base_models", "reakt_train", "model.sdf"
-)
+SOURCE_PKG_ROOT = os.path.dirname(os.path.dirname(__file__))
+SIM_CFG_SOURCE_PATH = os.path.join(SOURCE_PKG_ROOT, "config", "simulation_config.yaml")
+SIM_CFG_INSTALLED_PATH = os.path.join(pkg_share, "config", "simulation_config.yaml")
 
 GENERATED_TRAIN_DIR = os.path.join(
     pkg_share, "models", "generated_train"
@@ -36,9 +35,6 @@ GENERATED_TRAIN_SDF_PATH = os.path.join(
     GENERATED_TRAIN_DIR, "model_with_sensors.sdf"
 )
 
-WORLD_NAME = "train_world"
-TRAIN_ENTITY_NAME = "gazebo_train"
-
 models_path = os.path.join(pkg_share, "models")
 existing_gz_path = os.environ.get("GZ_SIM_RESOURCE_PATH", "")
 if existing_gz_path:
@@ -46,138 +42,74 @@ if existing_gz_path:
 else:
     gz_path = models_path
 
+
 # ==================================================
-# Gazebo helpers 
+# Simulation config
 # ==================================================
 
-def quaternion_from_rpy(roll, pitch, yaw):
-    cr = math.cos(roll * 0.5)
-    sr = math.sin(roll * 0.5)
-    cp = math.cos(pitch * 0.5)
-    sp = math.sin(pitch * 0.5)
-    cy = math.cos(yaw * 0.5)
-    sy = math.sin(yaw * 0.5)
+def get_simulation_config_path():
+    if os.path.exists(SIM_CFG_SOURCE_PATH):
+        return SIM_CFG_SOURCE_PATH
+    return SIM_CFG_INSTALLED_PATH
 
-    qw = cr * cp * cy + sr * sp * sy
-    qx = sr * cp * cy - cr * sp * sy
-    qy = cr * sp * cy + sr * cp * sy
-    qz = cr * cp * sy - sr * sp * cy
 
-    return (qx, qy, qz, qw)
+def load_simulation_config():
+    with open(get_simulation_config_path(), "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}
 
-def world_pose_to_base_link_pose(
-    sensor_world_pos,
-    sensor_world_rpy,
-    train_world_pos,
-    train_world_q,
-    base_link_offset=(0.0, 0.0, 0.3),  # <-- IMPORTANT: match your SDF
-    debug_name=None
-):
-    """
-    Convert a WORLD pose into a pose RELATIVE TO base_link.
-    Fully debug-instrumented.
+    simulation = data.get("simulation", {})
+    train = data.get("train", {})
+    spawn = train.get("spawn", {})
+    sensor_mount = data.get("sensor_mount", {})
+    mount_pose = sensor_mount.get("pose", {})
 
-    Inputs:
-      sensor_world_pos : (x, y, z)
-      sensor_world_rpy : (roll, pitch, yaw)
-      train_world_pos  : (x, y, z)
-      train_world_q    : (qx, qy, qz, qw)
-      base_link_offset : base_link pose inside model
-    """
+    model_name = simulation.get("train_model")
+    entity_name = simulation.get("train_entity_name", model_name or "gazebo_train")
+    world_name = simulation.get("world", "train_world")
 
-    # --- helpers ---
-    def quat_conjugate(q):
-        x, y, z, w = q
-        return (-x, -y, -z, w)
+    if not model_name:
+        raise ValueError("Missing 'simulation.train_model' in simulation_config.yaml")
 
-    def quat_multiply(q1, q2):
-        x1, y1, z1, w1 = q1
-        x2, y2, z2, w2 = q2
-        return (
-            w1*x2 + x1*w2 + y1*z2 - z1*y2,
-            w1*y2 - x1*z2 + y1*w2 + z1*x2,
-            w1*z2 + x1*y2 - y1*x2 + z1*w2,
-            w1*w2 - x1*x2 - y1*y2 - z1*z2,
-        )
+    if world_name.endswith(".sdf"):
+        world_name = os.path.splitext(world_name)[0]
 
-    def rotate(v, q):
-        x, y, z = v
-        qx, qy, qz, qw = q
-
-        ix =  qw*x + qy*z - qz*y
-        iy =  qw*y + qz*x - qx*z
-        iz =  qw*z + qx*y - qy*x
-        iw = -qx*x - qy*y - qz*z
-
-        rx = ix*qw + iw*-qx + iy*-qz - iz*-qy
-        ry = iy*qw + iw*-qy + iz*-qx - ix*-qz
-        rz = iz*qw + iw*-qz + ix*-qy - iy*-qx
-        return (rx, ry, rz)
-
-    # --- unpack ---
-    sx, sy, sz = sensor_world_pos
-    tx, ty, tz = train_world_pos
-    ox, oy, oz = base_link_offset
-
-    # --- step 1: world → model frame ---
-    p_world_rel = (sx - tx, sy - ty, sz - tz)
-
-    inv_train_q = quat_conjugate(train_world_q)
-    p_model = rotate(p_world_rel, inv_train_q)
-
-    # --- step 2: model → base_link ---
-    p_base = (
-        p_model[0] - ox,
-        p_model[1] - oy,
-        p_model[2] - oz,
+    base_train_sdf_path = os.path.join(
+        pkg_share, "models", "base_models", model_name, "model.sdf"
     )
 
-    # --- orientation ---
-    sensor_q_world = quaternion_from_rpy(*sensor_world_rpy)
-    q_base = quat_multiply(inv_train_q, sensor_q_world)
+    if not os.path.exists(base_train_sdf_path):
+        raise FileNotFoundError(f"Configured train model not found: {base_train_sdf_path}")
 
-    # --- debug ---
-    if debug_name:
-        print("\n[SensorPoseDebug]")
-        print(f"  Slot:           {debug_name}")
-        print(f"  World pos:      {sensor_world_pos}")
-        print(f"  Train pos:      {train_world_pos}")
-        print(f"  Base offset:    {base_link_offset}")
-        print(f"  Rel model pos:  {tuple(round(v,4) for v in p_model)}")
-        print(f"  Base_link pos:  {tuple(round(v,4) for v in p_base)}")
+    sensor_entity_name = f"{entity_name}_with_sensors"
 
     return {
-        "x": round(p_base[0], 6),
-        "y": round(p_base[1], 6),
-        "z": round(p_base[2], 6),
-        "roll": round(sensor_world_rpy[0], 6),
-        "pitch": round(sensor_world_rpy[1], 6),
-        "yaw": round(sensor_world_rpy[2], 6),
+        "model_name": model_name,
+        "world_name": world_name,
+        "base_train_sdf_path": base_train_sdf_path,
+        "base_entity_name": entity_name,
+        "sensor_entity_name": sensor_entity_name,
+        "spawn": {
+            "x": float(spawn.get("x", 0.0)),
+            "y": float(spawn.get("y", 0.0)),
+            "z": float(spawn.get("z", 0.0)),
+            "roll": float(spawn.get("roll", spawn.get("R", 0.0))),
+            "pitch": float(spawn.get("pitch", spawn.get("P", 0.0))),
+            "yaw": float(spawn.get("yaw", spawn.get("Y", 0.0))),
+        },
+        "sensor_mount": {
+            "x": float(mount_pose.get("x", 0.0)),
+            "y": float(mount_pose.get("y", 0.0)),
+            "z": float(mount_pose.get("z", 0.0)),
+            "roll": float(mount_pose.get("roll", 0.0)),
+            "pitch": float(mount_pose.get("pitch", 0.0)),
+            "yaw": float(mount_pose.get("yaw", 0.0)),
+        },
     }
 
-def get_train_spawn_pose():
-    cfg_path = os.path.join(
-        pkg_share, "config", "aois.yaml"
-    )
 
-    with open(cfg_path, "r") as f:
-        cfg = yaml.safe_load(f)
-
-    train = cfg["train_spawn"]
-
-    position = (
-        train["x"],
-        train["y"],
-        train["z"],
-    )
-
-    orientation = quaternion_from_rpy(
-        train["R"],
-        train["P"],
-        train["Y"],
-    )
-
-    return position, orientation
+# ==================================================
+# Gazebo helpers
+# ==================================================
 
 def list_gazebo_models():
     result = subprocess.run(
@@ -194,8 +126,11 @@ def list_gazebo_models():
 
 
 def delete_entity(entity_name):
+    sim_cfg = load_simulation_config()
+    world_name = sim_cfg["world_name"]
+
     cmd = (
-        f"ros2 service call /world/{WORLD_NAME}/remove "
+        f"ros2 service call /world/{world_name}/remove "
         f"ros_gz_interfaces/srv/DeleteEntity "
         f"\"{{entity: {{name: '{entity_name}', type: 2}}}}\""
     )
@@ -204,28 +139,53 @@ def delete_entity(entity_name):
 
 
 def delete_train_if_exists():
+    sim_cfg = load_simulation_config()
+    train_entity_name = sim_cfg["sensor_entity_name"]
+
     models = list_gazebo_models()
-    if TRAIN_ENTITY_NAME in models:
-        print(f"[SensorSpawn] Deleting existing train '{TRAIN_ENTITY_NAME}'")
-        delete_entity(TRAIN_ENTITY_NAME)
+    if train_entity_name in models:
+        print(f"[SensorSpawn] Deleting existing train '{train_entity_name}'")
+        delete_entity(train_entity_name)
     else:
-        print(f"[SensorSpawn] No existing train to delete")
+        print("[SensorSpawn] No existing train to delete")
+
+
+def quaternion_from_rpy(roll, pitch, yaw):
+    cr = math.cos(roll * 0.5)
+    sr = math.sin(roll * 0.5)
+    cp = math.cos(pitch * 0.5)
+    sp = math.sin(pitch * 0.5)
+    cy = math.cos(yaw * 0.5)
+    sy = math.sin(yaw * 0.5)
+
+    qw = cr * cp * cy + sr * sp * sy
+    qx = sr * cp * cy - cr * sp * sy
+    qy = cr * sp * cy + sr * cp * sy
+    qz = cr * cp * sy - sr * sp * cy
+
+    return qx, qy, qz, qw
 
 
 def spawn_train_from_sdf(sdf_path):
-    position, orientation = get_train_spawn_pose()
+    sim_cfg = load_simulation_config()
+    train_entity_name = sim_cfg["sensor_entity_name"]
+    world_name = sim_cfg["world_name"]
+    spawn = sim_cfg["spawn"]
 
-    x, y, z = position
-    qx, qy, qz, qw = orientation
+    qx, qy, qz, qw = quaternion_from_rpy(
+        spawn["roll"],
+        spawn["pitch"],
+        spawn["yaw"],
+    )
 
     cmd = (
-        f"ros2 service call /world/{WORLD_NAME}/create "
+        f"ros2 service call /world/{world_name}/create "
         f"ros_gz_interfaces/srv/SpawnEntity "
         f"\"{{entity_factory: {{"
-        f"name: '{TRAIN_ENTITY_NAME}', "
+        f"name: '{train_entity_name}', "
         f"sdf_filename: '{sdf_path}', "
         f"pose: {{"
-        f"position: {{x: {x}, y: {y}, z: {z}}}, "
+        f"position: {{x: {spawn['x']}, y: {spawn['y']}, z: {spawn['z']}}}, "
         f"orientation: {{x: {qx}, y: {qy}, z: {qz}, w: {qw}}}"
         f"}}"
         f"}}}}\""
@@ -236,17 +196,53 @@ def spawn_train_from_sdf(sdf_path):
 
 
 # ==================================================
+# Sensor mount link injection
+# ==================================================
+
+def generate_sensor_mount_link_block(sensor_mount_pose):
+    pose_str = (
+        f"{sensor_mount_pose['x']} {sensor_mount_pose['y']} {sensor_mount_pose['z']} "
+        f"{sensor_mount_pose['roll']} {sensor_mount_pose['pitch']} {sensor_mount_pose['yaw']}"
+    )
+
+    return f"""
+<link name="sensor_mount_link">
+  <pose>{pose_str}</pose>
+  <gravity>false</gravity>
+  <self_collide>false</self_collide>
+  <kinematic>true</kinematic>
+  <inertial>
+    <mass>0.001</mass>
+    <inertia>
+      <ixx>1e-6</ixx>
+      <iyy>1e-6</iyy>
+      <izz>1e-6</izz>
+      <ixy>0</ixy>
+      <ixz>0</ixz>
+      <iyz>0</iyz>
+    </inertia>
+  </inertial>
+</link>
+
+<joint name="sensor_mount_joint" type="fixed">
+  <parent>base_link</parent>
+  <child>sensor_mount_link</child>
+</joint>
+"""
+
+
+# ==================================================
 # Step 1 – Resolve sensor info from YAML
 # ==================================================
 
 def get_sensor_info():
-    with open(SENSORS_YAML_PATH, "r") as f:
+    with open(SENSORS_YAML_PATH, "r", encoding="utf-8") as f:
         sensors_yaml = yaml.safe_load(f) or {}
 
-    with open(SENSOR_ASSIGNMENT_YAML_PATH, "r") as f:
+    with open(SENSOR_ASSIGNMENT_YAML_PATH, "r", encoding="utf-8") as f:
         assignment_yaml = yaml.safe_load(f) or {}
 
-    with open(GENERATED_SENSOR_POS_YAML_PATH, "r") as f:
+    with open(GENERATED_SENSOR_POS_YAML_PATH, "r", encoding="utf-8") as f:
         positions_yaml = yaml.safe_load(f) or {}
 
     sensors_by_name = sensors_yaml.get("sensors", {})
@@ -262,7 +258,6 @@ def get_sensor_info():
     resolved = []
 
     for slot_name, sensor_name in assignments.items():
-
         if slot_name not in slot_by_name:
             print(f"[SensorSpawn] Missing slot '{slot_name}'")
             continue
@@ -270,31 +265,18 @@ def get_sensor_info():
         if sensor_name not in sensors_by_name:
             print(f"[SensorSpawn] Missing sensor '{sensor_name}'")
             continue
-        # --- TRAIN POSE ---
-        train_pos, train_q = get_train_spawn_pose()
 
         slot_pose = slot_by_name[slot_name]["pose"]
 
-        sensor_world_pos = (
-            slot_pose["x"],
-            slot_pose["y"],
-            slot_pose["z"],
-        )
+        converted_pose = {
+            "x": round(slot_pose["x"], 6),
+            "y": round(slot_pose["y"], 6),
+            "z": round(slot_pose["z"], 6),
+            "roll": round(slot_pose.get("roll", 0.0), 6),
+            "pitch": round(slot_pose.get("pitch", 0.0), 6),
+            "yaw": round(slot_pose.get("yaw", 0.0), 6),
+        }
 
-        sensor_world_rpy = (
-            slot_pose.get("roll", 0.0),
-            slot_pose.get("pitch", 0.0),
-            slot_pose.get("yaw", 0.0),
-        )
-
-        converted_pose = world_pose_to_base_link_pose(
-            sensor_world_pos=sensor_world_pos,
-            sensor_world_rpy=sensor_world_rpy,
-            train_world_pos=train_pos,
-            train_world_q=train_q,
-            base_link_offset=(0.0, 0.0, 0.3),  # MUST match base_link joint
-            debug_name=slot_name,
-        )
         sensor_cfg = sensors_by_name[sensor_name]
         topic = sensor_cfg.get("topic", sensor_name)
 
@@ -323,6 +305,8 @@ def _pose_to_sdf(pose):
         f"{pose.get('pitch', 0)} "
         f"{pose.get('yaw', 0)}"
     )
+
+
 def generate_lidar_sensor_block(entry):
     sensor_name = entry["sensor_name"]
     slot = entry["slot_name"]
@@ -331,7 +315,6 @@ def generate_lidar_sensor_block(entry):
     cfg = entry["sensor_config"]
     params = cfg.get("params", {})
 
-    # --- YAML params with defaults ---
     topic = cfg.get("topic", topic_name)
     update_rate = cfg.get("update_rate", 10.0)
 
@@ -351,7 +334,6 @@ def generate_lidar_sensor_block(entry):
     always_on = str(params.get("always_on", True)).lower()
     visualize = str(params.get("visualize", True)).lower()
 
-    # --- Angle computation ---
     h_min = -horizontal_fov / 2.0
     h_max = horizontal_fov / 2.0
 
@@ -364,26 +346,27 @@ def generate_lidar_sensor_block(entry):
   <gravity>false</gravity>
   <mass>0.01</mass>
   <inertia>
-  <ixx>1e-4</ixx>
-  <iyy>1e-4</iyy>
-  <izz>1e-4</izz>
-  <ixy>0</ixy>
-  <ixz>0</ixz>
-  <iyz>0</iyz>
-</inertia>
-<visual name="lidar_body_visual">
-            <geometry>
-                <cylinder>
-                <radius>0.03</radius>
-                <length>0.05</length>
-                </cylinder>
-            </geometry>
-            <material>
-                <ambient>0.9 0.1 0.1 1</ambient>
-                <diffuse>1.0 0.15 0.15 1</diffuse>
-                <specular>0.05 0.05 0.05 1</specular>
-            </material>
-            </visual>
+    <ixx>1e-4</ixx>
+    <iyy>1e-4</iyy>
+    <izz>1e-4</izz>
+    <ixy>0</ixy>
+    <ixz>0</ixz>
+    <iyz>0</iyz>
+  </inertia>
+
+  <visual name="lidar_body_visual">
+    <geometry>
+      <cylinder>
+        <radius>0.03</radius>
+        <length>0.05</length>
+      </cylinder>
+    </geometry>
+    <material>
+      <ambient>0.9 0.1 0.1 1</ambient>
+      <diffuse>1.0 0.15 0.15 1</diffuse>
+      <specular>0.05 0.05 0.05 1</specular>
+    </material>
+  </visual>
 
   <sensor name="{sensor_name}" type="gpu_lidar">
     <pose>0 0 0 0 0 0</pose>
@@ -418,10 +401,11 @@ def generate_lidar_sensor_block(entry):
 </link>
 
 <joint name="{sensor_name}_{slot}_joint" type="fixed">
-  <parent>base_link</parent>
+  <parent>sensor_mount_link</parent>
   <child>{sensor_name}_{slot}_link</child>
 </joint>
 """
+
 
 def generate_camera_sensor_block(entry):
     sensor_name = entry["sensor_name"]
@@ -431,13 +415,12 @@ def generate_camera_sensor_block(entry):
     cfg = entry["sensor_config"]
     params = cfg.get("params", {})
 
-    # --- YAML params with defaults ---
     topic = cfg.get("topic", topic_name)
     update_rate = cfg.get("update_rate", 30.0)
 
     width = int(params.get("width", 640))
     height = int(params.get("height", 480))
-    horizontal_fov = float(params.get("horizontal_fov", 1.396263))  # ~80 deg
+    horizontal_fov = float(params.get("horizontal_fov", 1.396263))
 
     near_clip = float(params.get("near_clip", 0.1))
     far_clip = float(params.get("far_clip", 100.0))
@@ -451,26 +434,27 @@ def generate_camera_sensor_block(entry):
   <gravity>false</gravity>
   <mass>0.01</mass>
   <inertia>
-  <ixx>1e-4</ixx>
-  <iyy>1e-4</iyy>
-  <izz>1e-4</izz>
-  <ixy>0</ixy>
-  <ixz>0</ixz>
-  <iyz>0</iyz>
-</inertia>
-<visual name="camera_body_visual">
-            <geometry>
-                <cylinder>
-                <radius>0.03</radius>
-                <length>0.05</length>
-                </cylinder>
-            </geometry>
-            <material>
-                <ambient>0.9 0.1 0.1 1</ambient>
-                <diffuse>1.0 0.15 0.15 1</diffuse>
-                <specular>0.05 0.05 0.05 1</specular>          
-            </material>
-            </visual>
+    <ixx>1e-4</ixx>
+    <iyy>1e-4</iyy>
+    <izz>1e-4</izz>
+    <ixy>0</ixy>
+    <ixz>0</ixz>
+    <iyz>0</iyz>
+  </inertia>
+
+  <visual name="camera_body_visual">
+    <geometry>
+      <cylinder>
+        <radius>0.03</radius>
+        <length>0.05</length>
+      </cylinder>
+    </geometry>
+    <material>
+      <ambient>0.9 0.1 0.1 1</ambient>
+      <diffuse>1.0 0.15 0.15 1</diffuse>
+      <specular>0.05 0.05 0.05 1</specular>
+    </material>
+  </visual>
 
   <sensor name="{sensor_name}" type="camera">
     <pose>0 0 0 0 0 0</pose>
@@ -481,13 +465,11 @@ def generate_camera_sensor_block(entry):
 
     <camera>
       <horizontal_fov>{horizontal_fov}</horizontal_fov>
-
       <image>
         <width>{width}</width>
         <height>{height}</height>
         <format>R8G8B8</format>
       </image>
-
       <clip>
         <near>{near_clip}</near>
         <far>{far_clip}</far>
@@ -497,10 +479,11 @@ def generate_camera_sensor_block(entry):
 </link>
 
 <joint name="{sensor_name}_{slot}_joint" type="fixed">
-  <parent>base_link</parent>
+  <parent>sensor_mount_link</parent>
   <child>{sensor_name}_{slot}_link</child>
 </joint>
 """
+
 
 def generate_depth_camera_sensor_block(entry):
     sensor_name = entry["sensor_name"]
@@ -524,34 +507,34 @@ def generate_depth_camera_sensor_block(entry):
   <pose>{pose}</pose>
   <gravity>false</gravity>
   <always_on>true</always_on>
-<visualize>true</visualize>
+  <visualize>true</visualize>
   <mass>0.01</mass>
   <inertia>
-  <ixx>1e-4</ixx>
-  <iyy>1e-4</iyy>
-  <izz>1e-4</izz>
-  <ixy>0</ixy>
-  <ixz>0</ixz>
-  <iyz>0</iyz>
-</inertia>
-<visual name="camera_depth_body_visual">
-            <geometry>
-                <cylinder>
-                <radius>0.03</radius>
-                <length>0.05</length>
-                </cylinder>
-            </geometry>
-            <material>
-                <ambient>0.9 0.1 0.1 1</ambient>
-                <diffuse>1.0 0.15 0.15 1</diffuse>
-                <specular>0.05 0.05 0.05 1</specular>            
-            </material>
-            </visual>
+    <ixx>1e-4</ixx>
+    <iyy>1e-4</iyy>
+    <izz>1e-4</izz>
+    <ixy>0</ixy>
+    <ixz>0</ixz>
+    <iyz>0</iyz>
+  </inertia>
+
+  <visual name="camera_depth_body_visual">
+    <geometry>
+      <cylinder>
+        <radius>0.03</radius>
+        <length>0.05</length>
+      </cylinder>
+    </geometry>
+    <material>
+      <ambient>0.9 0.1 0.1 1</ambient>
+      <diffuse>1.0 0.15 0.15 1</diffuse>
+      <specular>0.05 0.05 0.05 1</specular>
+    </material>
+  </visual>
 
   <sensor name="{sensor_name}" type="depth_camera">
     <update_rate>{update_rate}</update_rate>
     <topic>{topic}/image</topic>
-
     <camera>
       <horizontal_fov>{hfov}</horizontal_fov>
       <image>
@@ -567,10 +550,11 @@ def generate_depth_camera_sensor_block(entry):
 </link>
 
 <joint name="{sensor_name}_{slot}_joint" type="fixed">
-  <parent>base_link</parent>
+  <parent>sensor_mount_link</parent>
   <child>{sensor_name}_{slot}_link</child>
 </joint>
 """
+
 
 def generate_rgbd_camera_sensor_block(entry):
     sensor_name = entry["sensor_name"]
@@ -582,6 +566,7 @@ def generate_rgbd_camera_sensor_block(entry):
     width = int(params.get("width", 640))
     height = int(params.get("height", 480))
     hfov = float(params.get("horizontal_fov", 1.396263))
+    topic = entry["topic"]
 
     return f"""
 <link name="{sensor_name}_{slot}_link">
@@ -589,26 +574,27 @@ def generate_rgbd_camera_sensor_block(entry):
   <gravity>false</gravity>
   <mass>0.01</mass>
   <inertia>
-  <ixx>1e-4</ixx>
-  <iyy>1e-4</iyy>
-  <izz>1e-4</izz>
-  <ixy>0</ixy>
-  <ixz>0</ixz>
-  <iyz>0</iyz>
-</inertia>
-<visual name="camera_rgbd_body_visual">
-            <geometry>
-                <cylinder>
-                <radius>0.03</radius>
-                <length>0.05</length>
-                </cylinder>
-            </geometry>
-            <material>
-                <ambient>0.9 0.1 0.1 1</ambient>
-                <diffuse>1.0 0.15 0.15 1</diffuse>
-                <specular>0.05 0.05 0.05 1</specular>           
-            </material>
-            </visual>
+    <ixx>1e-4</ixx>
+    <iyy>1e-4</iyy>
+    <izz>1e-4</izz>
+    <ixy>0</ixy>
+    <ixz>0</ixz>
+    <iyz>0</iyz>
+  </inertia>
+
+  <visual name="camera_rgbd_body_visual">
+    <geometry>
+      <cylinder>
+        <radius>0.03</radius>
+        <length>0.05</length>
+      </cylinder>
+    </geometry>
+    <material>
+      <ambient>0.9 0.1 0.1 1</ambient>
+      <diffuse>1.0 0.15 0.15 1</diffuse>
+      <specular>0.05 0.05 0.05 1</specular>
+    </material>
+  </visual>
 
   <sensor name="{sensor_name}_rgb" type="camera">
     <topic>{topic}/image</topic>
@@ -635,10 +621,11 @@ def generate_rgbd_camera_sensor_block(entry):
 </link>
 
 <joint name="{sensor_name}_{slot}_joint" type="fixed">
-  <parent>base_link</parent>
+  <parent>sensor_mount_link</parent>
   <child>{sensor_name}_{slot}_link</child>
 </joint>
 """
+
 
 def generate_imu_sensor_block(entry):
     sensor_name = entry["sensor_name"]
@@ -651,26 +638,27 @@ def generate_imu_sensor_block(entry):
   <gravity>false</gravity>
   <mass>0.01</mass>
   <inertia>
-  <ixx>1e-4</ixx>
-  <iyy>1e-4</iyy>
-  <izz>1e-4</izz>
-  <ixy>0</ixy>
-  <ixz>0</ixz>
-  <iyz>0</iyz>
-</inertia>
-<visual name="imu_body_visual">
-            <geometry>
-                <cylinder>
-                <radius>0.03</radius>
-                <length>0.05</length>
-                </cylinder>
-            </geometry>
-            <material>
-                <ambient>0.9 0.1 0.1 1</ambient>
-                <diffuse>1.0 0.15 0.15 1</diffuse>
-                <specular>0.05 0.05 0.05 1</specular>          
-            </material>
-            </visual>
+    <ixx>1e-4</ixx>
+    <iyy>1e-4</iyy>
+    <izz>1e-4</izz>
+    <ixy>0</ixy>
+    <ixz>0</ixz>
+    <iyz>0</iyz>
+  </inertia>
+
+  <visual name="imu_body_visual">
+    <geometry>
+      <cylinder>
+        <radius>0.03</radius>
+        <length>0.05</length>
+      </cylinder>
+    </geometry>
+    <material>
+      <ambient>0.9 0.1 0.1 1</ambient>
+      <diffuse>1.0 0.15 0.15 1</diffuse>
+      <specular>0.05 0.05 0.05 1</specular>
+    </material>
+  </visual>
 
   <sensor name="{sensor_name}" type="imu">
     <topic>imu</topic>
@@ -690,10 +678,11 @@ def generate_imu_sensor_block(entry):
 </link>
 
 <joint name="{sensor_name}_{slot}_joint" type="fixed">
-  <parent>base_link</parent>
+  <parent>sensor_mount_link</parent>
   <child>{sensor_name}_{slot}_link</child>
 </joint>
 """
+
 
 def generate_navsat_sensor_block(entry):
     sensor_name = entry["sensor_name"]
@@ -706,26 +695,27 @@ def generate_navsat_sensor_block(entry):
   <gravity>false</gravity>
   <mass>0.01</mass>
   <inertia>
-  <ixx>1e-4</ixx>
-  <iyy>1e-4</iyy>
-  <izz>1e-4</izz>
-  <ixy>0</ixy>
-  <ixz>0</ixz>
-  <iyz>0</iyz>
-</inertia>
-<visual name="navsat_body_visual">
-            <geometry>
-                <cylinder>
-                <radius>0.03</radius>
-                <length>0.05</length>
-                </cylinder>
-            </geometry>
-            <material>
-                <ambient>0.9 0.1 0.1 1</ambient>
-                <diffuse>1.0 0.15 0.15 1</diffuse>
-                <specular>0.05 0.05 0.05 1</specular>           
-            </material>
-            </visual>
+    <ixx>1e-4</ixx>
+    <iyy>1e-4</iyy>
+    <izz>1e-4</izz>
+    <ixy>0</ixy>
+    <ixz>0</ixz>
+    <iyz>0</iyz>
+  </inertia>
+
+  <visual name="navsat_body_visual">
+    <geometry>
+      <cylinder>
+        <radius>0.03</radius>
+        <length>0.05</length>
+      </cylinder>
+    </geometry>
+    <material>
+      <ambient>0.9 0.1 0.1 1</ambient>
+      <diffuse>1.0 0.15 0.15 1</diffuse>
+      <specular>0.05 0.05 0.05 1</specular>
+    </material>
+  </visual>
 
   <sensor name="{sensor_name}" type="navsat">
     <topic>navsat</topic>
@@ -733,10 +723,11 @@ def generate_navsat_sensor_block(entry):
 </link>
 
 <joint name="{sensor_name}_{slot}_joint" type="fixed">
-  <parent>base_link</parent>
+  <parent>sensor_mount_link</parent>
   <child>{sensor_name}_{slot}_link</child>
 </joint>
 """
+
 
 def generate_magnetometer_sensor_block(entry):
     sensor_name = entry["sensor_name"]
@@ -754,10 +745,11 @@ def generate_magnetometer_sensor_block(entry):
 </link>
 
 <joint name="{sensor_name}_{slot}_joint" type="fixed">
-  <parent>base_link</parent>
+  <parent>sensor_mount_link</parent>
   <child>{sensor_name}_{slot}_link</child>
 </joint>
 """
+
 
 def generate_sensor_sdf_blocks(resolved_sensors):
     blocks = []
@@ -777,7 +769,7 @@ def generate_sensor_sdf_blocks(resolved_sensors):
         elif sensor_type == "navsat":
             blocks.append(generate_navsat_sensor_block(entry))
         elif sensor_type == "magnetometer":
-            blocks.append(generate_magnometer_sensor_block(entry))
+            blocks.append(generate_magnetometer_sensor_block(entry))
         else:
             print(f"[SensorSpawn] Unsupported sensor type '{sensor_type}'")
 
@@ -789,8 +781,11 @@ def generate_sensor_sdf_blocks(resolved_sensors):
 # ==================================================
 
 def inject_sensor_xml_into_sdf(sensor_xml):
+    sim_cfg = load_simulation_config()
+    base_train_sdf_path = sim_cfg["base_train_sdf_path"]
+
     parser = etree.XMLParser(remove_comments=False)
-    tree = etree.parse(BASE_TRAIN_SDF_PATH, parser)
+    tree = etree.parse(base_train_sdf_path, parser)
     root = tree.getroot()
     model = root.find("model")
 
@@ -814,7 +809,10 @@ def inject_sensor_xml_into_sdf(sensor_xml):
     for elem in list(parent)[start_idx + 1:end_idx]:
         parent.remove(elem)
 
-    wrapped = etree.fromstring(f"<wrapper>{sensor_xml}</wrapper>")
+    sensor_mount_xml = generate_sensor_mount_link_block(sim_cfg["sensor_mount"])
+    full_generated_xml = sensor_mount_xml + "\n" + sensor_xml
+
+    wrapped = etree.fromstring(f"<wrapper>{full_generated_xml}</wrapper>")
     insert_idx = parent.index(start_marker) + 1
 
     for elem in wrapped:
@@ -828,7 +826,7 @@ def inject_sensor_xml_into_sdf(sensor_xml):
         encoding="UTF-8",
     )
 
-    print(f"[SensorSpawn] Generated train SDF → {GENERATED_TRAIN_SDF_PATH}")
+    print(f"[SensorSpawn] Generated train SDF -> {GENERATED_TRAIN_SDF_PATH}")
     return GENERATED_TRAIN_SDF_PATH
 
 
@@ -852,8 +850,17 @@ def regenerate_and_spawn_train(context):
 # ==================================================
 
 def generate_launch_description():
+    sim_cfg = load_simulation_config()
+
     return LaunchDescription([
-        LogInfo(msg="Sensor spawn launch: regenerate train with sensors"),
+        LogInfo(
+            msg=(
+                f"Sensor spawn launch: regenerate train with sensors "
+                f"from model '{sim_cfg['model_name']}' "
+                f"in world '{sim_cfg['world_name']}' "
+                f"as '{sim_cfg['sensor_entity_name']}'"
+            )
+        ),
         SetEnvironmentVariable("GZ_SIM_RESOURCE_PATH", gz_path),
         SetEnvironmentVariable("GAZEBO_MODEL_PATH", gz_path),
         OpaqueFunction(function=regenerate_and_spawn_train),

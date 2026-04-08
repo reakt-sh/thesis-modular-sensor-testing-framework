@@ -62,8 +62,9 @@ RUN python3 -m venv --system-site-packages /root/venvs/ros \
     'test -f /ws/install/setup.bash && source /ws/install/setup.bash' \
     >> /root/.bashrc
 
-#missing lib for poses
-#RUN apt install -y ros-jazzy-tf-transformations
+
+RUN /root/venvs/ros/bin/pip install --no-cache-dir textual  
+
 
 WORKDIR /ws
 # (Keep upstream ENTRYPOINT ["/ros_entrypoint.sh"] and CMD ["bash"])

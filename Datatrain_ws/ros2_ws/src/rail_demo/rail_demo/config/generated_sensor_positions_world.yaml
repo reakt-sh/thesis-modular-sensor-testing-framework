@@ -1,0 +1,235 @@
+slots:
+- name: top_aoi_plane_r0_c0
+  aoi: top_aoi_plane
+  grid:
+    row: 0
+    col: 0
+  pose:
+    x: -0.166667
+    y: -0.266667
+    z: 1.29
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  sensor: null
+- name: top_aoi_plane_r0_c1
+  aoi: top_aoi_plane
+  grid:
+    row: 0
+    col: 1
+  pose:
+    x: 0.1
+    y: -0.266667
+    z: 1.29
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  sensor: null
+- name: top_aoi_plane_r0_c2
+  aoi: top_aoi_plane
+  grid:
+    row: 0
+    col: 2
+  pose:
+    x: 0.366667
+    y: -0.266667
+    z: 1.29
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  sensor: null
+- name: top_aoi_plane_r1_c0
+  aoi: top_aoi_plane
+  grid:
+    row: 1
+    col: 0
+  pose:
+    x: -0.166667
+    y: 0.0
+    z: 1.29
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  sensor: null
+- name: top_aoi_plane_r1_c1
+  aoi: top_aoi_plane
+  grid:
+    row: 1
+    col: 1
+  pose:
+    x: 0.1
+    y: 0.0
+    z: 1.29
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  sensor: null
+- name: top_aoi_plane_r1_c2
+  aoi: top_aoi_plane
+  grid:
+    row: 1
+    col: 2
+  pose:
+    x: 0.366667
+    y: 0.0
+    z: 1.29
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  sensor: null
+- name: top_aoi_plane_r2_c0
+  aoi: top_aoi_plane
+  grid:
+    row: 2
+    col: 0
+  pose:
+    x: -0.166667
+    y: 0.266667
+    z: 1.29
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  sensor: null
+- name: top_aoi_plane_r2_c1
+  aoi: top_aoi_plane
+  grid:
+    row: 2
+    col: 1
+  pose:
+    x: 0.1
+    y: 0.266667
+    z: 1.29
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  sensor: null
+- name: top_aoi_plane_r2_c2
+  aoi: top_aoi_plane
+  grid:
+    row: 2
+    col: 2
+  pose:
+    x: 0.366667
+    y: 0.266667
+    z: 1.29
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  sensor: null
+- name: front_aoi_plane_r0_c0
+  aoi: front_aoi_plane
+  grid:
+    row: 0
+    col: 0
+  pose:
+    x: 1.24992
+    y: -0.333333
+    z: 0.72
+    roll: 0.0
+    pitch: 1.57
+    yaw: 0.0
+  sensor: null
+- name: front_aoi_plane_r0_c1
+  aoi: front_aoi_plane
+  grid:
+    row: 0
+    col: 1
+  pose:
+    x: 1.25
+    y: -0.333333
+    z: 0.62
+    roll: 0.0
+    pitch: 1.57
+    yaw: 0.0
+  sensor: null
+- name: front_aoi_plane_r0_c2
+  aoi: front_aoi_plane
+  grid:
+    row: 0
+    col: 2
+  pose:
+    x: 1.25008
+    y: -0.333333
+    z: 0.52
+    roll: 0.0
+    pitch: 1.57
+    yaw: 0.0
+  sensor: null
+- name: front_aoi_plane_r1_c0
+  aoi: front_aoi_plane
+  grid:
+    row: 1
+    col: 0
+  pose:
+    x: 1.24992
+    y: 0.0
+    z: 0.72
+    roll: 0.0
+    pitch: 1.57
+    yaw: 0.0
+  sensor: null
+- name: front_aoi_plane_r1_c1
+  aoi: front_aoi_plane
+  grid:
+    row: 1
+    col: 1
+  pose:
+    x: 1.25
+    y: 0.0
+    z: 0.62
+    roll: 0.0
+    pitch: 1.57
+    yaw: 0.0
+  sensor: null
+- name: front_aoi_plane_r1_c2
+  aoi: front_aoi_plane
+  grid:
+    row: 1
+    col: 2
+  pose:
+    x: 1.25008
+    y: 0.0
+    z: 0.52
+    roll: 0.0
+    pitch: 1.57
+    yaw: 0.0
+  sensor: null
+- name: front_aoi_plane_r2_c0
+  aoi: front_aoi_plane
+  grid:
+    row: 2
+    col: 0
+  pose:
+    x: 1.24992
+    y: 0.333333
+    z: 0.72
+    roll: 0.0
+    pitch: 1.57
+    yaw: 0.0
+  sensor: null
+- name: front_aoi_plane_r2_c1
+  aoi: front_aoi_plane
+  grid:
+    row: 2
+    col: 1
+  pose:
+    x: 1.25
+    y: 0.333333
+    z: 0.62
+    roll: 0.0
+    pitch: 1.57
+    yaw: 0.0
+  sensor: null
+- name: front_aoi_plane_r2_c2
+  aoi: front_aoi_plane
+  grid:
+    row: 2
+    col: 2
+  pose:
+    x: 1.25008
+    y: 0.333333
+    z: 0.52
+    roll: 0.0
+    pitch: 1.57
+    yaw: 0.0
+  sensor: null

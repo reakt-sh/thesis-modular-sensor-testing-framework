@@ -1,0 +1,253 @@
+slots:
+- name: top_aoi_plane_r0_c0
+  aoi: top_aoi_plane
+  grid:
+    row: 0
+    col: 0
+  pose:
+    x: -0.248633
+    y: 0.166718
+    z: 1.14
+    roll: 0.0
+    pitch: 0.0
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: top_aoi_plane_r0_c1
+  aoi: top_aoi_plane
+  grid:
+    row: 0
+    col: 1
+  pose:
+    x: -0.248687
+    y: -0.099949
+    z: 1.14
+    roll: 0.0
+    pitch: 0.0
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: top_aoi_plane_r0_c2
+  aoi: top_aoi_plane
+  grid:
+    row: 0
+    col: 2
+  pose:
+    x: -0.248742
+    y: -0.366616
+    z: 1.14
+    roll: 0.0
+    pitch: 0.0
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: top_aoi_plane_r1_c0
+  aoi: top_aoi_plane
+  grid:
+    row: 1
+    col: 0
+  pose:
+    x: 0.018034
+    y: 0.166663
+    z: 1.14
+    roll: 0.0
+    pitch: 0.0
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: top_aoi_plane_r1_c1
+  aoi: top_aoi_plane
+  grid:
+    row: 1
+    col: 1
+  pose:
+    x: 0.01798
+    y: -0.100004
+    z: 1.14
+    roll: 0.0
+    pitch: 0.0
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: top_aoi_plane_r1_c2
+  aoi: top_aoi_plane
+  grid:
+    row: 1
+    col: 2
+  pose:
+    x: 0.017925
+    y: -0.366671
+    z: 1.14
+    roll: 0.0
+    pitch: 0.0
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: top_aoi_plane_r2_c0
+  aoi: top_aoi_plane
+  grid:
+    row: 2
+    col: 0
+  pose:
+    x: 0.284701
+    y: 0.166609
+    z: 1.14
+    roll: 0.0
+    pitch: 0.0
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: top_aoi_plane_r2_c1
+  aoi: top_aoi_plane
+  grid:
+    row: 2
+    col: 1
+  pose:
+    x: 0.284647
+    y: -0.100058
+    z: 1.14
+    roll: 0.0
+    pitch: 0.0
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: top_aoi_plane_r2_c2
+  aoi: top_aoi_plane
+  grid:
+    row: 2
+    col: 2
+  pose:
+    x: 0.284592
+    y: -0.366725
+    z: 1.14
+    roll: 0.0
+    pitch: 0.0
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: front_aoi_plane_r0_c0
+  aoi: front_aoi_plane
+  grid:
+    row: 0
+    col: 0
+  pose:
+    x: -0.315588
+    y: -1.249856
+    z: 0.57
+    roll: 0.0
+    pitch: 1.57
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: front_aoi_plane_r0_c1
+  aoi: front_aoi_plane
+  grid:
+    row: 0
+    col: 1
+  pose:
+    x: -0.315588
+    y: -1.249936
+    z: 0.47
+    roll: 0.0
+    pitch: 1.57
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: front_aoi_plane_r0_c2
+  aoi: front_aoi_plane
+  grid:
+    row: 0
+    col: 2
+  pose:
+    x: -0.315588
+    y: -1.250016
+    z: 0.37
+    roll: 0.0
+    pitch: 1.57
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: front_aoi_plane_r1_c0
+  aoi: front_aoi_plane
+  grid:
+    row: 1
+    col: 0
+  pose:
+    x: 0.017745
+    y: -1.249924
+    z: 0.57
+    roll: 0.0
+    pitch: 0.0
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: front_aoi_plane_r1_c1
+  aoi: front_aoi_plane
+  grid:
+    row: 1
+    col: 1
+  pose:
+    x: 0.017745
+    y: -1.250004
+    z: 0.47
+    roll: 0.0
+    pitch: 0.0
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: front_aoi_plane_r1_c2
+  aoi: front_aoi_plane
+  grid:
+    row: 1
+    col: 2
+  pose:
+    x: 0.017745
+    y: -1.250084
+    z: 0.37
+    roll: 0.0
+    pitch: 0.0
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: front_aoi_plane_r2_c0
+  aoi: front_aoi_plane
+  grid:
+    row: 2
+    col: 0
+  pose:
+    x: 0.351078
+    y: -1.249992
+    z: 0.57
+    roll: 0.0
+    pitch: 1.57
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: front_aoi_plane_r2_c1
+  aoi: front_aoi_plane
+  grid:
+    row: 2
+    col: 1
+  pose:
+    x: 0.351078
+    y: -1.250072
+    z: 0.47
+    roll: 0.0
+    pitch: 1.57
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null
+- name: front_aoi_plane_r2_c2
+  aoi: front_aoi_plane
+  grid:
+    row: 2
+    col: 2
+  pose:
+    x: 0.351078
+    y: -1.250152
+    z: 0.37
+    roll: 0.0
+    pitch: 1.57
+    yaw: -1.571
+  frame: sensor_mount_link
+  sensor: null

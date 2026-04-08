@@ -28,6 +28,7 @@ def quaternion_from_rpy(roll, pitch, yaw):
 
     return (qx, qy, qz, qw)
 
+
 def rotate_vector_by_quaternion(v, q):
     x, y, z = v
     qx, qy, qz, qw = q
@@ -44,13 +45,42 @@ def rotate_vector_by_quaternion(v, q):
 
     return (rx, ry, rz)
 
+
+# ----------------------------
+# Simulation config helpers
+# ----------------------------
+
+def load_simulation_config():
+    pkg = get_package_share_directory("rail_demo")
+    cfg_path = os.path.join(pkg, "config", "simulation_config.yaml")
+
+    if not os.path.exists(cfg_path):
+        raise FileNotFoundError(f"simulation_config.yaml not found: {cfg_path}")
+
+    with open(cfg_path, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}
+
+    simulation = data.get("simulation", {})
+    world_name = simulation.get("world")
+
+    if not world_name:
+        raise ValueError("Missing 'simulation.world' in simulation_config.yaml")
+
+    if world_name.endswith(".sdf"):
+        world_name = os.path.splitext(world_name)[0]
+
+    return {
+        "world_name": world_name,
+    }
+
+
 # ----------------------------
 # Gazebo helpers
 # ----------------------------
 
-def delete_entity(entity_name):
+def delete_entity(entity_name, world_name):
     cmd = (
-        f"ros2 service call /world/train_world/remove "
+        f"ros2 service call /world/{world_name}/remove "
         f"ros_gz_interfaces/srv/DeleteEntity "
         f"\"{{entity: {{name: '{entity_name}', type: 2}}}}\""
     )
@@ -72,19 +102,19 @@ def list_gazebo_models():
     return models
 
 
-def delete_all_aoi_entities():
+def delete_all_aoi_entities(world_name):
     models = list_gazebo_models()
     for m in models:
         if "aoi" in m.lower():
-            delete_entity(m)
+            delete_entity(m, world_name)
 
 
-def spawn_entity(entity_name, sdf_filename, position, orientation):
+def spawn_entity(entity_name, sdf_filename, position, orientation, world_name):
     x, y, z = position
     qx, qy, qz, qw = orientation
 
     cmd = (
-        f"ros2 service call /world/train_world/create "
+        f"ros2 service call /world/{world_name}/create "
         f"ros_gz_interfaces/srv/SpawnEntity "
         f"\"{{entity_factory: {{"
         f"name: '{entity_name}', "
@@ -172,12 +202,12 @@ def generate_centered_grid_points(width, depth, rows, cols):
 
 def write_sensor_positions_yaml(slots):
     pkg = get_package_share_directory("rail_demo")
-    path = os.path.join(pkg, "config", "generated_sensor_positions.yaml")
+    path = os.path.join(pkg, "config", "generated_sensor_positions_world.yaml")
 
     with open(path, "w", encoding="utf-8") as f:
         yaml.safe_dump({"slots": slots}, f, sort_keys=False)
 
-    print(f"[AOI] Wrote sensor slots → {path}")
+    print(f"[AOI] Wrote sensor slots -> {path}")
 
 
 # ----------------------------
@@ -188,10 +218,13 @@ def spawn_aois(context):
     pkg = get_package_share_directory("rail_demo")
     cfg_path = os.path.join(pkg, "config", "aois.yaml")
 
-    with open(cfg_path, "r") as f:
+    with open(cfg_path, "r", encoding="utf-8") as f:
         cfg = yaml.safe_load(f)
 
-    delete_all_aoi_entities()
+    sim_cfg = load_simulation_config()
+    world_name = sim_cfg["world_name"]
+
+    delete_all_aoi_entities(world_name)
 
     grid_sdf = get_grid_point_sdf()
     sensor_slots = []
@@ -213,7 +246,7 @@ def spawn_aois(context):
         )
         sdf_path = write_plane_model(name, sdf_xml)
 
-        spawn_entity(name, sdf_path, pos_world, q_world)
+        spawn_entity(name, sdf_path, pos_world, q_world, world_name)
 
         if "grid" in aoi:
             grid = aoi["grid"]
@@ -239,7 +272,8 @@ def spawn_aois(context):
                     dot_name,
                     grid_sdf,
                     p_world,
-                    q_world
+                    q_world,
+                    world_name
                 )
 
                 sensor_slots.append({
@@ -247,12 +281,9 @@ def spawn_aois(context):
                     "aoi": name,
                     "grid": {"row": r, "col": c},
                     "pose": {
-                        # WORLD position (authoritative)
                         "x": round(p_world[0], 6),
                         "y": round(p_world[1], 6),
                         "z": round(p_world[2], 6),
-
-                        # Inherit AOI orientation (Option A)
                         "roll": round(pose["roll"], 6),
                         "pitch": round(pose["pitch"], 6),
                         "yaw": round(pose["yaw"], 6),
@@ -260,8 +291,7 @@ def spawn_aois(context):
                     "sensor": None
                 })
 
-
-    #write_sensor_positions_yaml(sensor_slots)
+    write_sensor_positions_yaml(sensor_slots)
     return []
 
 

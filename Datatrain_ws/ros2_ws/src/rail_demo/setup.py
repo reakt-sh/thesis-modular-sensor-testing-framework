@@ -37,7 +37,7 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='David Horn',
-    maintainer_email='david@example.com',
+    maintainer_email='davidhoernchen@gmail.com',
     description='Train demo world & tools',
     license='MIT',
     extras_require={'test': ['pytest']},

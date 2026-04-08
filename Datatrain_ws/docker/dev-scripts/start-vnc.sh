@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+
+# Launches the containerized VNC/noVNC desktop session used to access
+# Gazebo and other graphical tools through a browser.
+
 set -e
 : "${VNC_GEOMETRY:=1600x900}"
 
