@@ -9,7 +9,7 @@
 .idea/
 
 # ignore the 'writing' folder at the repo root
-/writing/
+/Writing/
 
 # colcon artifacts
 /Datatrain_ws/ros2_ws/build
